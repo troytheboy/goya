@@ -20,32 +20,47 @@
         android:layout_height="100dp"
         android:background="@color/colorWhite">
 
-        <EditText
-            android:id="@+id/title"
-            android:layout_width="300dp"
+        <TextView
+            android:id="@+id/title_header"
+            android:layout_width="50dp"
             android:layout_height="50dp"
-            android:text="Title"
-            android:textColor="#040404"
-            android:textSize="15dip"
-            android:textStyle="bold"
-            android:typeface="sans" />
+            android:text="Title: "
+            android:textAlignment="center"/>
 
         <EditText
-            android:id="@+id/desc"
-            android:layout_width="300dp"
+            android:id="@+id/title_text"
+            android:layout_width="250dp"
             android:layout_height="50dp"
-            android:text="Desc"
             android:textColor="#040404"
             android:textSize="15dip"
             android:textStyle="bold"
             android:typeface="sans"
-            android:layout_below="@+id/title"/>
+            android:layout_toRightOf="@+id/title_header"/>
+
+        <TextView
+            android:id="@+id/desc_header"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="Desc: "
+            android:layout_below="@id/title_header"
+            android:textAlignment="center"/>
+
+        <EditText
+            android:id="@+id/desc_text"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:textColor="#040404"
+            android:textSize="15dip"
+            android:textStyle="bold"
+            android:typeface="sans"
+            android:layout_below="@+id/title_text"
+            android:layout_toRightOf="@id/desc_header"/>
 
         <Button
             android:id="@+id/button_marvel"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_toRightOf="@+id/title"
+            android:layout_toRightOf="@+id/title_text"
             android:text="@string/btn_marvel" />
 
 

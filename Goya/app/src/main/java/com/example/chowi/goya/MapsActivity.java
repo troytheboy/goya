@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.Toast;
 
 import java.util.Map;
 
@@ -50,7 +51,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
 
-    EditText eventTitle, eventDesc;
+    private double mLongitude;
+    private double mLatitude;
 
 
     @Override
@@ -80,6 +82,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 // Perform action on click
                 Log.i("hello","hello");
+                EditText titleEditText = (EditText) findViewById(R.id.title_text);
+                String titleText = titleEditText.getText().toString();
+
+                EditText descEditText = (EditText) findViewById(R.id.desc_text);
+                String descText = descEditText.getText().toString();
+
+                // if the number is empty, dont send and toast error message
+                if (titleText.isEmpty()) {
+                    Toast.makeText(MapsActivity.this, "Enter a title", Toast.LENGTH_SHORT).show();
+                    // if the text body is empty, dont send and toast error message
+                } else if (descText.isEmpty()) {
+                    Toast.makeText(MapsActivity.this, "Enter a description", Toast.LENGTH_SHORT).show();
+                    // send text and reset field values
+                } else {
+
+                    double currentLatitude = mLatitude;
+                    double currentLongitude = mLongitude;
+                    LatLng currentLatLng = new LatLng(currentLatitude, currentLongitude);
+                    mMap.addMarker(new MarkerOptions().position(currentLatLng).title(titleText).snippet(descText));
+                    titleEditText.setText("");
+                    descEditText.setText("");
+                }
 
             }
         });
@@ -126,9 +150,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.i(TAG, "Location services connected.");
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (location == null) {
+            Log.i("hello", "location is null");
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
         else {
+            Log.i("hello", "location is not null");
             handleNewLocation(location);
         }
 
@@ -171,11 +197,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     public void handleNewLocation(Location location) {
+
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
+        mLatitude = currentLatitude;
+        mLongitude = currentLongitude;
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
 
-        Log.d(TAG, location.toString());
+        Log.i("hello", "handle new location" + location.toString());
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
