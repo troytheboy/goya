@@ -33,12 +33,17 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
 import java.util.Map;
 
 import static android.R.attr.button;
+import static com.example.chowi.goya.R.id.map;
 import static com.example.chowi.goya.R.layout.activity_maps;
 
 
@@ -61,7 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(map);
         mapFragment.getMapAsync(this);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -125,7 +130,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
+
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+
+        myRef.setValue("Hello, World!");
+        // Write a message to the database
+        Log.i("hello", "firebase should have just worked");
 
         // Add a marker in Sydney and move the camera
         LatLng uw = new LatLng(47.655548, -122.303200);
@@ -215,8 +229,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                    .getMap();
+
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(map);
+            mapFragment.getMapAsync(this);
+
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();

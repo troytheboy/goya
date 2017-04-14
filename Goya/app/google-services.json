@@ -1,0 +1,58 @@
+{
+  "project_info": {
+    "project_number": "798356612414",
+    "firebase_url": "https://goya-1491537148507.firebaseio.com",
+    "project_id": "goya-1491537148507",
+    "storage_bucket": "goya-1491537148507.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:798356612414:android:8441421e5cc30315",
+        "android_client_info": {
+          "package_name": "com.example.chowi.goya"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "798356612414-91n59490cebcd0uu6sae1qtkrk4q269a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chowi.goya",
+            "certificate_hash": "6d0c907a267b42ca0654d86a007955bd04602107"
+          }
+        },
+        {
+          "client_id": "798356612414-s6vb2s3b1u77nhpc3494hof8v96k2qol.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPIkLZuyyJcixa6PFsB8uRyyW-KupCExY"
+        },
+        {
+          "current_key": "AIzaSyCXFzA7B4a-wLgREptpF-KYqPl6Hz0WTb4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "798356612414-s6vb2s3b1u77nhpc3494hof8v96k2qol.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
