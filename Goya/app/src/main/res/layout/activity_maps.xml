@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.chowi.goya.MapsActivity" >
     <Button
+        android:id="@+id/button_marvel"
         android:layout_height="100dp"
         android:layout_width="match_parent"
         android:text="@string/btn_marvel"
