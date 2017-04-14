@@ -1,15 +1,20 @@
 package com.example.chowi.goya;
 
+import android.Manifest;
 import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,10 +27,13 @@ import com.google.android.gms.maps.model.Polyline;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +49,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+
+        // Create the LocationRequest object
+        mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
+                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
     }
 
     public static final String TAG = MapsActivity.class.getSimpleName();
@@ -68,18 +82,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(uw2).title("Sunset!").snippet("Awesome view of the sunset from over here"));
         mMap.addMarker(new MarkerOptions().position(uw3).title("Free Donuts!").snippet("I ordered too many donuts, who wants some?"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(uw));
+        Log.i("hello", "hello");
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        // Check the permissions and request permissions
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            final String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+            ActivityCompat.requestPermissions(this, permissions, 0);
+        }
+
+
         Log.i(TAG, "Location services connected.");
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (location == null) {
-            // Blank for a moment...
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
         else {
             handleNewLocation(location);
-        };
+        }
 
     }
 
@@ -113,6 +135,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onPause() {
         super.onPause();
         if (mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
             mGoogleApiClient.disconnect();
         }
     }
@@ -146,5 +169,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // Set up the map
     private void setUpMap() {
         mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        handleNewLocation(location);
     }
 }
