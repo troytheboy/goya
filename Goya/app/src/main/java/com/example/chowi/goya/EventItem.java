@@ -18,9 +18,8 @@ public class EventItem {
         this.description = description;
     }
 
-    public EventItem(String id, String title, String description, double latitude, double longitude) {
+    public EventItem(String title, String description, double latitude, double longitude) {
         super();
-        this.id = id;
         this.title = title;
         this.description = description;
         this.latitude = latitude;

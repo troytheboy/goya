@@ -43,6 +43,7 @@ import android.widget.Toast;
 import java.util.Map;
 
 import static android.R.attr.button;
+import static android.R.attr.data;
 import static com.example.chowi.goya.R.id.map;
 import static com.example.chowi.goya.R.layout.activity_maps;
 
@@ -59,6 +60,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private double mLongitude;
     private double mLatitude;
 
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,9 +104,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     // send text and reset field values
                 } else {
 
+
+
                     double currentLatitude = mLatitude;
                     double currentLongitude = mLongitude;
                     LatLng currentLatLng = new LatLng(currentLatitude, currentLongitude);
+
+                    mDatabase = FirebaseDatabase.getInstance().getReference();
+                    EventItem newItem = new EventItem(titleText, descText, currentLatitude, currentLongitude);
+
+
+                    // Generate a reference to a new location and add some data using push()
+                    //Create new reference        calling push creates the unique key in firebase database but has no data yet
+                    DatabaseReference mypostref = mDatabase.push();
+                    //mypostref.setValue(data);
+                    String newKey = mypostref.getKey();
+
+
+                    mDatabase.child("events").child(newKey).setValue(newItem);
+
                     mMap.addMarker(new MarkerOptions().position(currentLatLng).title(titleText).snippet(descText));
                     titleEditText.setText("");
                     descEditText.setText("");
