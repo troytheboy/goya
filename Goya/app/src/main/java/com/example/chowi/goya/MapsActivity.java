@@ -33,8 +33,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 import android.widget.RelativeLayout.LayoutParams;
@@ -153,13 +156,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
+        DatabaseReference myRef = database.getReference("events");
 
-        myRef.setValue("Hello, World!");
+        // Read from the database
+        FirebaseDatabase.getInstance().getReference().child("events")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            EventItem eventItem = snapshot.getValue(EventItem.class);
+                            Log.i("hello in here", eventItem.title);
+
+                            LatLng currentItemLatLng = new LatLng(eventItem.getLatitude(), eventItem.getLongitude());
+                            mMap.addMarker(new MarkerOptions().position(currentItemLatLng).title(eventItem.title).snippet(eventItem.description));
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
+
         // Write a message to the database
         Log.i("hello", "firebase should have just worked");
 
         // Add a marker in Sydney and move the camera
+        /*
         LatLng uw = new LatLng(47.655548, -122.303200);
         LatLng uw2 = new LatLng(47.655248, -122.303200);
         LatLng uw3 = new LatLng(47.655548, -122.303000);
@@ -167,6 +189,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(uw2).title("Sunset!").snippet("Awesome view of the sunset from over here"));
         mMap.addMarker(new MarkerOptions().position(uw3).title("Free Donuts!").snippet("I ordered too many donuts, who wants some?"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(uw));
+        */
         Log.i("hello", "hello");
     }
 
