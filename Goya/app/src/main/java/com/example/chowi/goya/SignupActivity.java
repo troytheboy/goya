@@ -1,6 +1,7 @@
 package com.example.chowi.goya;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.app.ProgressDialog;
@@ -13,11 +14,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
+    private static final int REQUEST_SIGNIN = 0;
+
 
     @InjectView(R.id.input_name)
     EditText _nameText;
@@ -59,14 +65,14 @@ public class SignupActivity extends AppCompatActivity {
         _signupButton.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
-                R.style.AppTheme_Dark_Dialog);
+                R.style.AppTheme_NoActionBar);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
 
-        String name = _nameText.getText().toString();
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+        final String name = _nameText.getText().toString();
+        final String email = _emailText.getText().toString();
+        final String password = _passwordText.getText().toString();
 
         // TODO: Implement your own signup logic here.
 
@@ -75,7 +81,16 @@ public class SignupActivity extends AppCompatActivity {
                     public void run() {
                         // On complete call either onSignupSuccess or onSignupFailed
                         // depending on success
+
+                        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+                        AccountItem newAccount = new AccountItem(name, email, password);
+                        DatabaseReference mypostref = mDatabase.push();
+                        String newKey = mypostref.getKey();
+                        mDatabase.child("accounts").child(newKey).setValue(newAccount);
+                        Log.i("account created", "i think");
                         onSignupSuccess();
+
+
                         // onSignupFailed();
                         progressDialog.dismiss();
                     }
@@ -86,6 +101,9 @@ public class SignupActivity extends AppCompatActivity {
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
         setResult(RESULT_OK, null);
+
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivityForResult(intent, REQUEST_SIGNIN);
         finish();
     }
 

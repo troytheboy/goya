@@ -13,6 +13,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.chowi.goya.R;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -20,6 +27,7 @@ import butterknife.InjectView;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
+    private static final int REQUEST_MAPS = 0;
 
     @InjectView(R.id.input_email) EditText _emailText;
     @InjectView(R.id.input_password) EditText _passwordText;
@@ -62,15 +70,37 @@ public class LoginActivity extends AppCompatActivity {
         _loginButton.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.AppTheme_Dark_Dialog);
+                R.style.AppTheme_NoActionBar);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
 
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+        final String email = _emailText.getText().toString();
+        final String password = _passwordText.getText().toString();
 
-        // TODO: Implement your own authentication logic here.
+
+        // Read from the database
+        FirebaseDatabase.getInstance().getReference().child("accounts")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            AccountItem currentAccount = snapshot.getValue(AccountItem.class);
+                            String currEmail = currentAccount.getEmail();
+                            String currPass = currentAccount.getPassword();
+                            Log.i("curr account", currEmail + " " + currPass);
+                            if (email.equals(currentAccount.getEmail()) && password.equals(currentAccount.getPassword())) {
+                                onLoginSuccess();
+                            } else {
+                                onLoginFailed();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
@@ -81,6 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                     }
                 }, 3000);
+
     }
 
 
@@ -88,6 +119,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
+
 
                 // TODO: Implement successful signup logic here
                 // By default we just finish the Activity and log them in automatically
@@ -104,6 +136,9 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        startActivityForResult(intent, REQUEST_MAPS);
+
         finish();
     }
 

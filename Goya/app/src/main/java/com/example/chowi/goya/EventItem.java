@@ -5,8 +5,8 @@ package com.example.chowi.goya;
  */
 
 public class EventItem {
-    public String id, title, description;
-    public double latitude, longitude;
+    private String id, title, description;
+    private double latitude, longitude;
 
 
     public EventItem() {

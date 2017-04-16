@@ -155,9 +155,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("events");
-
         // Read from the database
         FirebaseDatabase.getInstance().getReference().child("events")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -165,10 +162,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             EventItem eventItem = snapshot.getValue(EventItem.class);
-                            Log.i("hello in here", eventItem.title);
+                            Log.i("hello in here", eventItem.getTitle());
 
                             LatLng currentItemLatLng = new LatLng(eventItem.getLatitude(), eventItem.getLongitude());
-                            mMap.addMarker(new MarkerOptions().position(currentItemLatLng).title(eventItem.title).snippet(eventItem.description));
+                            mMap.addMarker(new MarkerOptions().position(currentItemLatLng).title(eventItem.getTitle()).snippet(eventItem.getDescription()));
                         }
                     }
                     @Override
