@@ -80,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         // Read from the database
+
         FirebaseDatabase.getInstance().getReference().child("accounts")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -88,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                             AccountItem currentAccount = snapshot.getValue(AccountItem.class);
                             String currEmail = currentAccount.getEmail();
                             String currPass = currentAccount.getPassword();
-                            Log.i("curr account", currEmail + " " + currPass);
+                            Log.i("curr account", currEmail + " " + currPass + " " + currentAccount.getName());
                             if (email.equals(currentAccount.getEmail()) && password.equals(currentAccount.getPassword())) {
                                 onLoginSuccess();
                             } else {

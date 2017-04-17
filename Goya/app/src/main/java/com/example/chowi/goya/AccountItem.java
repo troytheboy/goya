@@ -1,6 +1,7 @@
 package com.example.chowi.goya;
 
 import static android.R.attr.id;
+import static android.R.attr.password;
 
 /**
  * Created by chowi on 4/15/2017.
@@ -8,7 +9,9 @@ import static android.R.attr.id;
 
 
 public class AccountItem {
-    private String name, email, password;
+    private String name;
+    private String email;
+    private String password;
 
 
     public AccountItem() {
@@ -31,7 +34,7 @@ public class AccountItem {
         return email;
     }
 
-    public void setEmail(String title) {
+    public void setEmail(String email) {
         this.email= email;
     }
 
@@ -39,7 +42,7 @@ public class AccountItem {
         return password;
     }
 
-    public void setPassword(String description) {
+    public void setPassword(String password) {
         this.password= password;
     }
 
