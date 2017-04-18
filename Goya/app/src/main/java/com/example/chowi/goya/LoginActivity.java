@@ -24,10 +24,14 @@ import com.google.firebase.database.ValueEventListener;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+import static android.R.attr.data;
+
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
     private static final int REQUEST_MAPS = 0;
+
+    private boolean loginValid = false;
 
     @InjectView(R.id.input_email) EditText _emailText;
     @InjectView(R.id.input_password) EditText _passwordText;
@@ -91,9 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                             String currPass = currentAccount.getPassword();
                             Log.i("curr account", currEmail + " " + currPass + " " + currentAccount.getName());
                             if (email.equals(currentAccount.getEmail()) && password.equals(currentAccount.getPassword())) {
-                                onLoginSuccess();
-                            } else {
-                                onLoginFailed();
+                                loginValid = true;
                             }
                         }
                     }
@@ -107,12 +109,14 @@ public class LoginActivity extends AppCompatActivity {
                 new Runnable() {
                     public void run() {
                         // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
+                        if (loginValid) {
+                            onLoginSuccess();
+                        } else {
+                            onLoginFailed();
+                        }
                         progressDialog.dismiss();
                     }
                 }, 3000);
-
     }
 
 
