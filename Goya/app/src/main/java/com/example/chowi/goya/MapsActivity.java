@@ -246,7 +246,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Log.i("hello", "handle new location" + location.toString());
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(currentLatitude, currentLongitude) , 14.0f) );
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
 
