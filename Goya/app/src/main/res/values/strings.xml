@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">Goya</string>
-    <string name="title_activity_maps">goya!</string>
+    <string name="title_activity_maps">goya</string>
     <string name="btn_marvel">+ Marvel</string>
     <string name="title_activity_login">goya</string>
     <string name="title_activity_signup">SignupActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_profile">Profile</string>
 
 
 </resources>
