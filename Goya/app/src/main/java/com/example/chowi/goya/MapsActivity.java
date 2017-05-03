@@ -30,6 +30,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -49,6 +50,7 @@ import static android.R.attr.button;
 import static android.R.attr.data;
 import static com.example.chowi.goya.R.id.map;
 import static com.example.chowi.goya.R.layout.activity_maps;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_CYAN;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
@@ -114,7 +116,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     LatLng currentLatLng = new LatLng(currentLatitude, currentLongitude);
 
                     mDatabase = FirebaseDatabase.getInstance().getReference();
-                    EventItem newItem = new EventItem(titleText, descText, currentLatitude, currentLongitude);
+                    EventItem newItem = new EventItem(titleText, descText, currentLatitude, currentLongitude, 0, 0);
 
 
                     // Generate a reference to a new location and add some data using push()
@@ -126,7 +128,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     mDatabase.child("events").child(newKey).setValue(newItem);
 
-                    mMap.addMarker(new MarkerOptions().position(currentLatLng).title(titleText).snippet(descText));
+                    mMap.addMarker(new MarkerOptions()
+                            .position(currentLatLng)
+                            .title(titleText)
+                            .snippet(descText)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                     titleEditText.setText("");
                     descEditText.setText("");
                 }
@@ -165,7 +171,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Log.i("hello in here", eventItem.getTitle());
 
                             LatLng currentItemLatLng = new LatLng(eventItem.getLatitude(), eventItem.getLongitude());
-                            mMap.addMarker(new MarkerOptions().position(currentItemLatLng).title(eventItem.getTitle()).snippet(eventItem.getDescription()));
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(currentItemLatLng)
+                                    .title(eventItem.getTitle())
+                                    .snippet(eventItem.getDescription())
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
                         }
                     }
                     @Override
