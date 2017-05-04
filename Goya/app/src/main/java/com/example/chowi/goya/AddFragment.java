@@ -26,6 +26,13 @@ public class AddFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add,
                 container, false);
+
+
+
+
+
+
+
         return view;
     }
 
@@ -40,7 +47,7 @@ public class AddFragment extends Fragment {
     }
 
     public void setText(String url) {
-        TextView view = (TextView) getView().findViewById(R.id.add_text);
+        TextView view = (TextView) getView().findViewById(R.id.desc_text);
         view.setText(url);
     }
 }

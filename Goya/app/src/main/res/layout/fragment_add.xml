@@ -5,10 +5,93 @@
     tools:context="com.example.chowi.goya.AddFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/add_text"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/add_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Title: "
+                android:textAlignment="center" />
+
+            <EditText
+                android:id="@+id/title_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#040404"
+                android:textSize="15dip"
+                android:textStyle="bold"
+                android:typeface="sans" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/add_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Desc: "
+                android:textAlignment="center"/>
+
+            <EditText
+                android:id="@+id/desc_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#040404"
+                android:textSize="15dip"
+                android:textStyle="bold"
+                android:typeface="sans" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/add_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add a picture: (optional)"
+                android:textAlignment="center" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fab_margin"
+                android:tint="#B8F4EA"
+                android:src="@drawable/ic_camera" />
+
+
+        </LinearLayout>
+
+
+
+        <Button
+            android:id="@+id/button_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/btn_post" />
+
+    </LinearLayout>
+
 
 </FrameLayout>

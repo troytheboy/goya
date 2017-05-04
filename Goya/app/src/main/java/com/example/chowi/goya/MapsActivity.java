@@ -61,9 +61,11 @@ import java.util.Map;
 
 import static android.R.attr.button;
 import static android.R.attr.data;
+import static com.example.chowi.goya.R.id.add;
 import static com.example.chowi.goya.R.id.map;
 import static com.example.chowi.goya.R.layout.activity_maps;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_CYAN;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.defaultMarker;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
@@ -118,6 +120,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(map);
@@ -136,71 +139,83 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
 
-        FloatingActionButton addFab = (FloatingActionButton)  findViewById(R.id.floatingActionButton);
+        final FloatingActionButton addFab = (FloatingActionButton)  findViewById(R.id.floatingActionButton);
         addFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.i("clicking fab", "clicking fab");
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                        LayoutParams.MATCH_PARENT,
-                        LayoutParams.MATCH_PARENT,
-                        50
-                );
-                LinearLayout addFragment = (LinearLayout) findViewById(R.id.container2);
-                addFragment.setLayoutParams(param);
+
+                //addFab.setVisibility(View.INVISIBLE);
+                AddFragment frg2=new AddFragment();//create the fragment instance for the bottom fragment
+
+                FragmentManager manager=getSupportFragmentManager();//create an instance of fragment manager
+
+                FragmentTransaction transaction=manager.beginTransaction();//create an instance of Fragment-transaction
+
+                transaction.add(R.id.container2, frg2, "Frag_Bot");
+
+                transaction.addToBackStack(null);
+
+                transaction.commit();
+
+                /*
+                final Button btnEvent = (Button) findViewById(R.id.button_post);
+                btnEvent.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        // Perform action on click
+                        Log.i("hello","hello");
+                        EditText titleEditText = (EditText) findViewById(R.id.title_text);
+                        String titleText = titleEditText.getText().toString();
+
+                        EditText descEditText = (EditText) findViewById(R.id.desc_text);
+                        String descText = descEditText.getText().toString();
+
+                        // if the number is empty, dont send and toast error message
+                        if (titleText.isEmpty()) {
+                            Toast.makeText(MapsActivity.this, "Enter a title", Toast.LENGTH_SHORT).show();
+                            // if the text body is empty, dont send and toast error message
+                        } else if (descText.isEmpty()) {
+                            Toast.makeText(MapsActivity.this, "Enter a description", Toast.LENGTH_SHORT).show();
+                            // send text and reset field values
+                        } else {
+
+
+
+                            double currentLatitude = mLatitude;
+                            double currentLongitude = mLongitude;
+                            LatLng currentLatLng = new LatLng(currentLatitude, currentLongitude);
+
+                            mDatabase = FirebaseDatabase.getInstance().getReference();
+                            EventItem newItem = new EventItem(titleText, descText, currentLatitude, currentLongitude, 0, 0);
+
+
+                            // Generate a reference to a new location and add some data using push()
+                            //Create new reference        calling push creates the unique key in firebase database but has no data yet
+                            DatabaseReference mypostref = mDatabase.push();
+                            //mypostref.setValue(data);
+                            String newKey = mypostref.getKey();
+
+
+                            mDatabase.child("events").child(newKey).setValue(newItem);
+
+
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(currentLatLng)
+                                    .title(titleText)
+                                    .snippet(descText)
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                            titleEditText.setText("");
+                            descEditText.setText("");
+                        }
+
+                    }
+                });
+                */
+
             }
         });
-        /*
-        final Button btnEvent = (Button) findViewById(R.id.button_marvel);
-        btnEvent.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Perform action on click
-                Log.i("hello","hello");
-                EditText titleEditText = (EditText) findViewById(R.id.title_text);
-                String titleText = titleEditText.getText().toString();
-
-                EditText descEditText = (EditText) findViewById(R.id.desc_text);
-                String descText = descEditText.getText().toString();
-
-                // if the number is empty, dont send and toast error message
-                if (titleText.isEmpty()) {
-                    Toast.makeText(MapsActivity.this, "Enter a title", Toast.LENGTH_SHORT).show();
-                    // if the text body is empty, dont send and toast error message
-                } else if (descText.isEmpty()) {
-                    Toast.makeText(MapsActivity.this, "Enter a description", Toast.LENGTH_SHORT).show();
-                    // send text and reset field values
-                } else {
 
 
 
-                    double currentLatitude = mLatitude;
-                    double currentLongitude = mLongitude;
-                    LatLng currentLatLng = new LatLng(currentLatitude, currentLongitude);
-
-                    mDatabase = FirebaseDatabase.getInstance().getReference();
-                    EventItem newItem = new EventItem(titleText, descText, currentLatitude, currentLongitude, 0, 0);
-
-
-                    // Generate a reference to a new location and add some data using push()
-                    //Create new reference        calling push creates the unique key in firebase database but has no data yet
-                    DatabaseReference mypostref = mDatabase.push();
-                    //mypostref.setValue(data);
-                    String newKey = mypostref.getKey();
-
-
-                    mDatabase.child("events").child(newKey).setValue(newItem);
-
-                    mMap.addMarker(new MarkerOptions()
-                            .position(currentLatLng)
-                            .title(titleText)
-                            .snippet(descText)
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                    titleEditText.setText("");
-                    descEditText.setText("");
-                }
-
-            }
-        });
-        */
     }
     
 

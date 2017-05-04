@@ -43,22 +43,15 @@
     </FrameLayout>
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/container2"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="600"
+        android:orientation="vertical"
         tools:context="com.example.chowi.goya.MapsActivity" >
 
-        <fragment
-            android:id="@+id/add"
-            android:name="com.example.chowi.goya.AddFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context="com.example.chowi.goya.MapsActivity" />
-
-    </LinearLayout>
+    </FrameLayout>
 
 
 
