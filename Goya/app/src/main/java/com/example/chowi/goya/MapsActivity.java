@@ -2,6 +2,7 @@ package com.example.chowi.goya;
 
 import android.Manifest;
 import android.app.ActionBar;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.content.IntentSender;
@@ -29,6 +30,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -133,6 +136,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
 
+        FloatingActionButton addFab = (FloatingActionButton)  findViewById(R.id.floatingActionButton);
+        addFab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.i("clicking fab", "clicking fab");
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                        LayoutParams.MATCH_PARENT,
+                        LayoutParams.MATCH_PARENT,
+                        50
+                );
+                LinearLayout addFragment = (LinearLayout) findViewById(R.id.container2);
+                addFragment.setLayoutParams(param);
+            }
+        });
+        /*
         final Button btnEvent = (Button) findViewById(R.id.button_marvel);
         btnEvent.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -183,6 +200,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
+        */
     }
     
 

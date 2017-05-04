@@ -1,9 +1,10 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.chowi.goya.MapsActivity" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -15,78 +16,109 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/container1"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.example.chowi.goya.MapsActivity" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:tint="#B8F4EA"
-        android:src="@drawable/ic_add_location" />
+        android:layout_weight="50"
+        tools:context="com.example.chowi.goya.MapsActivity" >
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.example.chowi.goya.MapsActivity" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:tint="#B8F4EA"
+            android:src="@drawable/ic_add_location" />
+
+    </FrameLayout>
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/container2"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="600"
+        tools:context="com.example.chowi.goya.MapsActivity" >
+
+        <fragment
+            android:id="@+id/add"
+            android:name="com.example.chowi.goya.AddFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.example.chowi.goya.MapsActivity" />
+
+    </LinearLayout>
+
+
 
     <!--app:elevation="4dp"/>-->
 
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@color/colorWhite">
-
-        <TextView
-            android:id="@+id/title_header"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:text="Title: "
-            android:textAlignment="center"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-        <EditText
-            android:id="@+id/title_text"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:textColor="#040404"
-            android:textSize="15dip"
-            android:textStyle="bold"
-            android:typeface="sans"
-            android:layout_toRightOf="@+id/title_header"/>
-
-        <TextView
-            android:id="@+id/desc_header"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:text="Desc: "
-            android:layout_below="@id/title_header"
-            android:textAlignment="center"/>
-
-        <EditText
-            android:id="@+id/desc_text"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:textColor="#040404"
-            android:textSize="15dip"
-            android:textStyle="bold"
-            android:typeface="sans"
-            android:layout_below="@+id/title_text"
-            android:layout_toRightOf="@id/desc_header"/>
-
-        <Button
-            android:id="@+id/button_marvel"
-            android:layout_width="100dp"
+        <!--
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_toRightOf="@+id/title_text"
-            android:text="@string/btn_marvel" />
+            android:background="@color/colorWhite">
+
+            <TextView
+                android:id="@+id/title_header"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="Title: "
+                android:textAlignment="center"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <EditText
+                android:id="@+id/title_text"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:textColor="#040404"
+                android:textSize="15dip"
+                android:textStyle="bold"
+                android:typeface="sans"
+                android:layout_toRightOf="@+id/title_header"/>
+
+            <TextView
+                android:id="@+id/desc_header"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="Desc: "
+                android:layout_below="@id/title_header"
+                android:textAlignment="center"/>
+
+            <EditText
+                android:id="@+id/desc_text"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:textColor="#040404"
+                android:textSize="15dip"
+                android:textStyle="bold"
+                android:typeface="sans"
+                android:layout_below="@+id/title_text"
+                android:layout_toRightOf="@id/desc_header"/>
+
+            <Button
+                android:id="@+id/button_marvel"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_toRightOf="@+id/title_text"
+                android:text="@string/btn_marvel" />
 
 
-    </RelativeLayout>
+        </RelativeLayout>
+        -->
 
 
-</FrameLayout>
+</LinearLayout>
