@@ -1,5 +1,7 @@
 package com.example.chowi.goya;
 
+import android.media.Image;
+
 /**
  * Created by chowi on 4/14/2017.
  */
@@ -8,6 +10,7 @@ public class EventItem {
     private String id, title, description;
     private double latitude, longitude, displayValue;
     private int goVotes, noVotes;
+    private Image image;
 
 
     public EventItem() {
@@ -21,7 +24,7 @@ public class EventItem {
         this.noVotes = 0;
     }
 
-    public EventItem(String title, String description, double latitude, double longitude, int goVotes, int noVotes) {
+    public EventItem(String title, String description, double latitude, double longitude, int goVotes, int noVotes, Image image) {
         super();
         this.title = title;
         this.description = description;
@@ -29,6 +32,7 @@ public class EventItem {
         this.longitude = longitude;
         this.goVotes = goVotes;
         this.noVotes = noVotes;
+        this.image = image;
     }
 
 
@@ -70,6 +74,9 @@ public class EventItem {
 
     public int getNoVotes() { return noVotes; }
     public void setNoVotes(int noVotes) { this.noVotes = noVotes; }
+
+    public Image getImage() { return image; }
+    public void setImage(Image image) { this.image = image; }
 
 
 

@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatCallback;
@@ -103,7 +104,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng currentLatLng = new LatLng(currentLatitude, currentLongitude);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        EventItem newItem = new EventItem(title, desc, currentLatitude, currentLongitude, 0, 0);
+        EventItem newItem = new EventItem(title, desc, currentLatitude, currentLongitude, 0, 0, null);
 
 
         // Generate a reference to a new location and add some data using push()
@@ -136,6 +137,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private FragmentManager mManager;
 
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,8 +158,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Toolbar toolbar= (Toolbar) findViewById(R.id.my_toolbar);
         delegate.setSupportActionBar(toolbar);
 
+        // Assume thisActivity is the current activity
+        int permissionCheck = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA);
 
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
 
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    MY_PERMISSIONS_REQUEST_CAMERA);
+
+            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+            // app-defined int constant. The callback method gets the
+            // result of the request.
+
+        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -191,6 +210,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         transaction.add(R.id.container2, frg2, "Frag_Bot");
 
         transaction.commit();
+
+
 
         /*
         final FloatingActionButton addFab = (FloatingActionButton)  findViewById(R.id.floatingActionButton);
@@ -271,6 +292,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
     
 
