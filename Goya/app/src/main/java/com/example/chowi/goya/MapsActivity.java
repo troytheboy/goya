@@ -61,6 +61,7 @@ import java.util.Map;
 
 import static android.R.attr.button;
 import static android.R.attr.data;
+import static android.R.attr.mode;
 import static com.example.chowi.goya.R.id.add;
 import static com.example.chowi.goya.R.id.map;
 import static com.example.chowi.goya.R.layout.activity_maps;
@@ -69,10 +70,14 @@ import static com.google.android.gms.maps.model.BitmapDescriptorFactory.defaultM
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+        AddFragment.OnHeadlineSelectedListener,
         AppCompatCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
+
+
+
 
     @Override
     public void onSupportActionModeStarted(ActionMode mode) {
@@ -86,6 +91,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public ActionMode onWindowStartingSupportActionMode(ActionMode.Callback callback) {
         return null;
+    }
+
+    public void onPostSelected(String title, String desc) {
+        // The user selected the headline of an article from the HeadlinesFragment
+        // Do something here to display that article
+        Log.i("hello", "article selected now!");
+        Toast.makeText(this, "Clicked "+ title + desc, Toast.LENGTH_LONG).show();
+        double currentLatitude = mLatitude;
+        double currentLongitude = mLongitude;
+        LatLng currentLatLng = new LatLng(currentLatitude, currentLongitude);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        EventItem newItem = new EventItem(title, desc, currentLatitude, currentLongitude, 0, 0);
+
+
+        // Generate a reference to a new location and add some data using push()
+        //Create new reference        calling push creates the unique key in firebase database but has no data yet
+        DatabaseReference mypostref = mDatabase.push();
+        //mypostref.setValue(data);
+        String newKey = mypostref.getKey();
+
+
+        mDatabase.child("events").child(newKey).setValue(newItem);
+
+
+        mMap.addMarker(new MarkerOptions()
+                .position(currentLatLng)
+                .title(title)
+                .snippet(desc)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
     }
 
     private GoogleMap mMap;
@@ -139,6 +174,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(10 * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+
+        /*
+        Bundle bundle = new Bundle();
+        bundle.put(mLatitude, mLongitude, mDatabase, mMap);
+        // set Fragment Arguments
+        Fragmentclass fragobj = new Fragmentclass();
+        fragobj.setArguments(bundle);*/
 
         BottomToolbarFragment frg2=new BottomToolbarFragment();//create the fragment instance for the bottom fragment
 
