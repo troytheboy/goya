@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,9 +31,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
+import static android.R.attr.defaultValue;
 import static android.app.Activity.RESULT_OK;
 import static android.os.Build.VERSION_CODES.M;
 
@@ -56,7 +60,11 @@ public class AddFragment extends Fragment implements View.OnClickListener {
 
     private ImageView mImageView;
 
+    private Bitmap mBitmap = null;
+
     static final int REQUEST_IMAGE_CAPTURE = 1;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,11 +72,18 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_add,
                 container, false);
 
+
         mTextView = (TextView) view.findViewById(R.id.add_pic);
         mFAB = (FloatingActionButton) view.findViewById(R.id.fab_camera);
 
         mImageView = (ImageView) view.findViewById(R.id.cam_image);
 
+
+        mTextView.setVisibility(View.GONE);
+        mFAB.setVisibility(View.GONE);
+
+
+        mImageView.setVisibility(View.VISIBLE);
 
         Button postButton = (Button) view.findViewById(R.id.button_post);
         postButton.setOnClickListener(this);
@@ -87,16 +102,17 @@ public class AddFragment extends Fragment implements View.OnClickListener {
                     return;
                 } else {
                     Log.i("cam permission check", "has permission");
-                    /*if (hasPermissionInManifest(context, "android.permission.CAMERA")) {
-                        Log.i("It has the permission", "should be working");
-                    }*/
+                /*if (hasPermissionInManifest(context, "android.permission.CAMERA")) {
+                    Log.i("It has the permission", "should be working");
+                }*/
                     dispatchTakePictureIntent();
                 }
-                        //dispatchTakePictureIntent();             }
+                //dispatchTakePictureIntent();             }
 
                 //}
             }
         });
+
 
         return view;
     }
@@ -132,6 +148,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
+            mBitmap = imageBitmap;
             mImageView.setImageBitmap(imageBitmap);
 
             mTextView.setVisibility(View.GONE);
@@ -173,15 +190,22 @@ public class AddFragment extends Fragment implements View.OnClickListener {
             Toast.makeText(getContext(), "Enter a description", Toast.LENGTH_SHORT).show();
             // send text and reset field values
         } else {
-            mCallback.onPostSelected(titleText, descText);
+            String encodedImage = null;
+            if (mBitmap != null) {
+                encodedImage = BitMapToString(mBitmap);
+            }
+            mCallback.onPostSelected(titleText, descText, encodedImage);
             titleEditText.setText("");
             descEditText.setText("");
+            mTextView.setVisibility(View.VISIBLE);
+            mFAB.setVisibility(View.VISIBLE);
+            mImageView.setVisibility(View.GONE);
         }
     }
 
     // Container Activity must implement this interface
     public interface OnHeadlineSelectedListener {
-        public void onPostSelected(String title, String desc);
+        public void onPostSelected(String title, String desc, String encodedImage);
     }
 
     @Override
@@ -197,6 +221,25 @@ public class AddFragment extends Fragment implements View.OnClickListener {
                     + " must implement OnHeadlineSelectedListener");
         }
 
+    }
+
+    public String BitMapToString(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String temp = Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+
+    public Bitmap StringToBitMap(String encodedString){
+        try {
+            byte [] encodeByte=Base64.decode(encodedString,Base64.DEFAULT);
+            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch(Exception e) {
+            e.getMessage();
+            return null;
+        }
     }
 
 }

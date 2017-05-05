@@ -46,6 +46,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.firebase.database.DataSnapshot;
@@ -71,6 +72,7 @@ import static com.google.android.gms.maps.model.BitmapDescriptorFactory.defaultM
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+        GoogleMap.OnMarkerClickListener,
         AddFragment.OnHeadlineSelectedListener,
         AppCompatCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -94,7 +96,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return null;
     }
 
-    public void onPostSelected(String title, String desc) {
+    public void onPostSelected(String title, String desc, String encodedImage) {
         // The user selected the headline of an article from the HeadlinesFragment
         // Do something here to display that article
         Log.i("hello", "article selected now!");
@@ -104,7 +106,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng currentLatLng = new LatLng(currentLatitude, currentLongitude);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        EventItem newItem = new EventItem(title, desc, currentLatitude, currentLongitude, 0, 0, null);
+        EventItem newItem = new EventItem(title, desc, currentLatitude, currentLongitude, 0, 0, encodedImage);
 
 
         // Generate a reference to a new location and add some data using push()
@@ -182,6 +184,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(map);
         mapFragment.getMapAsync(this);
 
+
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -210,86 +213,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         transaction.add(R.id.container2, frg2, "Frag_Bot");
 
         transaction.commit();
-
-
-
-        /*
-        final FloatingActionButton addFab = (FloatingActionButton)  findViewById(R.id.floatingActionButton);
-        addFab.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Log.i("clicking fab", "clicking fab");
-
-                //addFab.setVisibility(View.INVISIBLE);
-                AddFragment frg2=new AddFragment();//create the fragment instance for the bottom fragment
-
-                FragmentManager manager=getSupportFragmentManager();//create an instance of fragment manager
-
-                FragmentTransaction transaction=manager.beginTransaction();//create an instance of Fragment-transaction
-
-                transaction.add(R.id.container2, frg2, "Frag_Bot");
-
-                transaction.addToBackStack(null);
-
-                transaction.commit();
-
-                /*
-                final Button btnEvent = (Button) findViewById(R.id.button_post);
-                btnEvent.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        // Perform action on click
-                        Log.i("hello","hello");
-                        EditText titleEditText = (EditText) findViewById(R.id.title_text);
-                        String titleText = titleEditText.getText().toString();
-
-                        EditText descEditText = (EditText) findViewById(R.id.desc_text);
-                        String descText = descEditText.getText().toString();
-
-                        // if the number is empty, dont send and toast error message
-                        if (titleText.isEmpty()) {
-                            Toast.makeText(MapsActivity.this, "Enter a title", Toast.LENGTH_SHORT).show();
-                            // if the text body is empty, dont send and toast error message
-                        } else if (descText.isEmpty()) {
-                            Toast.makeText(MapsActivity.this, "Enter a description", Toast.LENGTH_SHORT).show();
-                            // send text and reset field values
-                        } else {
-
-
-
-                            double currentLatitude = mLatitude;
-                            double currentLongitude = mLongitude;
-                            LatLng currentLatLng = new LatLng(currentLatitude, currentLongitude);
-
-                            mDatabase = FirebaseDatabase.getInstance().getReference();
-                            EventItem newItem = new EventItem(titleText, descText, currentLatitude, currentLongitude, 0, 0);
-
-
-                            // Generate a reference to a new location and add some data using push()
-                            //Create new reference        calling push creates the unique key in firebase database but has no data yet
-                            DatabaseReference mypostref = mDatabase.push();
-                            //mypostref.setValue(data);
-                            String newKey = mypostref.getKey();
-
-
-                            mDatabase.child("events").child(newKey).setValue(newItem);
-
-
-                            mMap.addMarker(new MarkerOptions()
-                                    .position(currentLatLng)
-                                    .title(titleText)
-                                    .snippet(descText)
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                            titleEditText.setText("");
-                            descEditText.setText("");
-                        }
-
-                    }
-                });
-                */
-
-          //  }
-        //});
-
-
 
 
     }
@@ -337,6 +260,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
+        mMap.setOnMarkerClickListener(this);
 
 
         // Read from the database
@@ -349,11 +273,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Log.i("hello in here", eventItem.getTitle());
 
                             LatLng currentItemLatLng = new LatLng(eventItem.getLatitude(), eventItem.getLongitude());
-                            mMap.addMarker(new MarkerOptions()
+                            Marker currentMarker =  mMap.addMarker(new MarkerOptions()
                                     .position(currentItemLatLng)
                                     .title(eventItem.getTitle())
                                     .snippet(eventItem.getDescription())
                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+                            currentMarker.setTag(eventItem);
+
                         }
                     }
                     @Override
@@ -364,6 +290,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Write a message to the database
         Log.i("hello", "firebase should have just worked");
+    }
+
+    /** Called when the user clicks a marker. */
+    public boolean onMarkerClick(final Marker marker) {
+
+        // Retrieve the data from the marker.
+        EventItem eventItem = (EventItem) marker.getTag();
+
+        // Check if a click count was set, then display the click count.
+        Log.i("eventitem thing", eventItem.getImage());
+
+        String[] postData = {eventItem.getTitle(), eventItem.getDescription(), eventItem.getImage()};
+
+        Bundle bundle = new Bundle();
+        bundle.putStringArray("data", postData);
+        // set Fragmentclass Arguments
+
+
+        AddFragment frg2=new AddFragment();//create the fragment instance for the bottom fragment
+        frg2.setArguments(bundle);
+
+        FragmentManager manager= getSupportFragmentManager();//create an instance of fragment manager
+
+        FragmentTransaction transaction=manager.beginTransaction();//create an instance of Fragment-transaction
+
+        transaction.add(R.id.container2, frg2, "Frag_Bot");
+
+        transaction.addToBackStack(null);
+
+        transaction.commit();
+
+
+
+        // Return false to indicate that we have not consumed the event and that we wish
+        // for the default behavior to occur (which is for the camera to move such that the
+        // marker is centered and for the marker's info window to open, if it has one).
+        return false;
     }
 
     @Override
@@ -496,5 +459,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
     }
+
+
 
 }
