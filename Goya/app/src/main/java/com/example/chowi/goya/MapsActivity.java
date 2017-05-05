@@ -99,6 +99,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private AppCompatDelegate delegate;
 
+    private FragmentManager mManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,7 +140,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setInterval(10 * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
+        BottomToolbarFragment frg2=new BottomToolbarFragment();//create the fragment instance for the bottom fragment
 
+        FragmentManager manager=getSupportFragmentManager();//create an instance of fragment manager
+
+        FragmentTransaction transaction=manager.beginTransaction();//create an instance of Fragment-transaction
+
+        transaction.add(R.id.container2, frg2, "Frag_Bot");
+
+        transaction.commit();
+
+        /*
         final FloatingActionButton addFab = (FloatingActionButton)  findViewById(R.id.floatingActionButton);
         addFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -211,8 +223,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 });
                 */
 
-            }
-        });
+          //  }
+        //});
+
 
 
 
