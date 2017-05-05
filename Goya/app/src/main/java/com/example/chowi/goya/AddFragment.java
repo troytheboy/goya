@@ -51,6 +51,8 @@ public class AddFragment extends Fragment implements View.OnClickListener {
 
     //PackageManager pm = getActivity().getPackageManager();
 
+    private TextView mTextView;
+    private FloatingActionButton mFAB;
 
     private ImageView mImageView;
 
@@ -61,6 +63,11 @@ public class AddFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add,
                 container, false);
+
+        mTextView = (TextView) view.findViewById(R.id.add_pic);
+        mFAB = (FloatingActionButton) view.findViewById(R.id.fab_camera);
+
+        mImageView = (ImageView) view.findViewById(R.id.cam_image);
 
 
         Button postButton = (Button) view.findViewById(R.id.button_post);
@@ -126,6 +133,11 @@ public class AddFragment extends Fragment implements View.OnClickListener {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             mImageView.setImageBitmap(imageBitmap);
+
+            mTextView.setVisibility(View.GONE);
+            mFAB.setVisibility(View.GONE);
+
+            mImageView.setVisibility(View.VISIBLE);
         }
     }
 

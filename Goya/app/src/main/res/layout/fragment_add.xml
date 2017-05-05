@@ -79,6 +79,11 @@
                 android:tint="#B8F4EA"
                 android:src="@drawable/ic_camera" />
 
+            <ImageView
+                android:id="@+id/cam_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
 
         </LinearLayout>
 
