@@ -64,6 +64,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
+    private Bundle bundle = this.getArguments();
 
 
     @Override
@@ -79,11 +80,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         mImageView = (ImageView) view.findViewById(R.id.cam_image);
 
 
-        mTextView.setVisibility(View.GONE);
-        mFAB.setVisibility(View.GONE);
 
-
-        mImageView.setVisibility(View.VISIBLE);
 
         Button postButton = (Button) view.findViewById(R.id.button_post);
         postButton.setOnClickListener(this);
@@ -102,17 +99,16 @@ public class AddFragment extends Fragment implements View.OnClickListener {
                     return;
                 } else {
                     Log.i("cam permission check", "has permission");
-                /*if (hasPermissionInManifest(context, "android.permission.CAMERA")) {
-                    Log.i("It has the permission", "should be working");
-                }*/
+                    /*if (hasPermissionInManifest(context, "android.permission.CAMERA")) {
+                        Log.i("It has the permission", "should be working");
+                    }*/
                     dispatchTakePictureIntent();
                 }
-                //dispatchTakePictureIntent();             }
+                        //dispatchTakePictureIntent();             }
 
                 //}
             }
         });
-
 
         return view;
     }

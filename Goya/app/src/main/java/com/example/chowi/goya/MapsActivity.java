@@ -301,6 +301,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Check if a click count was set, then display the click count.
         Log.i("eventitem thing", eventItem.getImage());
 
+        /*
         String[] postData = {eventItem.getTitle(), eventItem.getDescription(), eventItem.getImage()};
 
         Bundle bundle = new Bundle();
@@ -320,6 +321,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         transaction.addToBackStack(null);
 
         transaction.commit();
+        */
 
 
 
