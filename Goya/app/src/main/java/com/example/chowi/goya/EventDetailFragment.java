@@ -84,8 +84,11 @@ public class EventDetailFragment extends Fragment {
             mTitleText.setText(data[0]);
             mDescText.setText(data[1]);
 
-            Bitmap image = StringToBitMap(data[2]);
-            mImageView.setImageBitmap(image);
+            if (data[2] != null) {
+                Bitmap image = StringToBitMap(data[2]);
+                mImageView.setImageBitmap(image);
+            }
+
         }
     }
 

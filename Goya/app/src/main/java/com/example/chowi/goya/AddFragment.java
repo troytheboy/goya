@@ -8,11 +8,15 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,11 +37,18 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static android.R.attr.defaultValue;
 import static android.app.Activity.RESULT_OK;
+import static android.content.ContentValues.TAG;
 import static android.os.Build.VERSION_CODES.M;
+import static java.security.AccessController.getContext;
 
 
 /**
@@ -65,6 +76,11 @@ public class AddFragment extends Fragment implements View.OnClickListener {
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private Bundle bundle = this.getArguments();
+
+    private URI mImageUri;
+
+    static final int REQUEST_TAKE_PHOTO = 1;
+
 
 
     @Override
@@ -103,6 +119,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
                         Log.i("It has the permission", "should be working");
                     }*/
                     dispatchTakePictureIntent();
+                    //captureCameraImage();
                 }
                         //dispatchTakePictureIntent();             }
 
@@ -132,25 +149,183 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         return false;
     }
 
+
+    private Uri imageToUploadUri;
+
+
     private void dispatchTakePictureIntent() {
+        /*
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
+        */
+        //new code
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(getContext(),
+                        "com.example.chowi.fileprovider",
+                        photoFile);
+                imageToUploadUri = photoURI;
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+
+
+    }
+
+    private static final int CAMERA_PHOTO = 111;
+
+
+    private void captureCameraImage() {
+        Intent chooserIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
+        chooserIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+        imageToUploadUri = Uri.fromFile(f);
+        startActivityForResult(chooserIntent, CAMERA_PHOTO);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            mBitmap = imageBitmap;
-            mImageView.setImageBitmap(imageBitmap);
 
-            mTextView.setVisibility(View.GONE);
-            mFAB.setVisibility(View.GONE);
 
-            mImageView.setVisibility(View.VISIBLE);
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
+            if (imageToUploadUri != null) {
+                Uri selectedImage = imageToUploadUri;
+                Bitmap imageBitmap = uriToBitmap(selectedImage);
+
+                mBitmap = imageBitmap;
+                mImageView.setImageBitmap(imageBitmap);
+
+                mTextView.setVisibility(View.GONE);
+                mFAB.setVisibility(View.GONE);
+
+                mImageView.setVisibility(View.VISIBLE);
+            }
+
+        }
+/*
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
+            if(imageToUploadUri != null){
+                Uri selectedImage = imageToUploadUri;
+                getContext().getContentResolver().notifyChange(selectedImage, null);
+                Bitmap reducedSizeBitmap = getBitmap(imageToUploadUri.getPath());
+                Log.i(imageToUploadUri.getPath(), "image to uploaduri path");
+                if(reducedSizeBitmap != null){
+                    mImageView.setImageBitmap(reducedSizeBitmap);
+                    mTextView.setVisibility(View.GONE);
+                    mFAB.setVisibility(View.GONE);
+
+                    mImageView.setVisibility(View.VISIBLE);
+                }else{
+                    Log.i("Error1", "while capturing image");
+                }
+            }else{
+                Log.i("Error2","while capturing image");
+            }
+        }
+*/
+        //if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            //Bundle extras = data.getExtras();
+            //Bitmap imageBitmap = (Bitmap) extras.get("data");
+            //mBitmap = imageBitmap;
+            //mImageView.setImageBitmap(imageBitmap);
+
+            //mTextView.setVisibility(View.GONE);
+            //mFAB.setVisibility(View.GONE);
+
+            //mImageView.setVisibility(View.VISIBLE);
+        //}
+    }
+
+
+
+    private Bitmap uriToBitmap(Uri selectedFileUri) {
+        Bitmap image = null;
+        try {
+            ParcelFileDescriptor parcelFileDescriptor =
+                    getContext().getContentResolver().openFileDescriptor(selectedFileUri, "r");
+            FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+            image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+
+
+            parcelFileDescriptor.close();
+            return image;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
+    }
+
+    private Bitmap getBitmap(String path) {
+
+        Uri uri = Uri.fromFile(new File(path));
+        InputStream in = null;
+        try {
+            final int IMAGE_MAX_SIZE = 1200000; // 1.2MP
+            in = getContext().getContentResolver().openInputStream(uri);
+
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(in, null, o);
+            in.close();
+
+
+            int scale = 1;
+            while ((o.outWidth * o.outHeight) * (1 / Math.pow(scale, 2)) >
+                    IMAGE_MAX_SIZE) {
+                scale++;
+            }
+            Log.d("", "scale = " + scale + ", orig-width: " + o.outWidth + ", orig-height: " + o.outHeight);
+
+            Bitmap b = null;
+            in = getContext().getContentResolver().openInputStream(uri);
+            if (scale > 1) {
+                scale--;
+                // scale to max possible inSampleSize that still yields an image
+                // larger than target
+                o = new BitmapFactory.Options();
+                o.inSampleSize = scale;
+                b = BitmapFactory.decodeStream(in, null, o);
+
+                // resize to desired dimensions
+                int height = b.getHeight();
+                int width = b.getWidth();
+                Log.d("", "1th scale operation dimenions - width: " + width + ", height: " + height);
+
+                double y = Math.sqrt(IMAGE_MAX_SIZE
+                        / (((double) width) / height));
+                double x = (y / height) * width;
+
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(b, (int) x,
+                        (int) y, true);
+                b.recycle();
+                b = scaledBitmap;
+
+                System.gc();
+            } else {
+                b = BitmapFactory.decodeStream(in);
+            }
+            in.close();
+
+            Log.d("", "bitmap size - width: " + b.getWidth() + ", height: " +
+                    b.getHeight());
+            return b;
+        } catch (IOException e) {
+            Log.e("", e.getMessage(), e);
+            return null;
         }
     }
 
@@ -237,6 +412,26 @@ public class AddFragment extends Fragment implements View.OnClickListener {
             return null;
         }
     }
+
+    String mCurrentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+
 
 }
 
