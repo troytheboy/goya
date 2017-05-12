@@ -216,6 +216,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .title(title)
                 .snippet(desc)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+        finish();
+        startActivity(getIntent());
     }
 
 
