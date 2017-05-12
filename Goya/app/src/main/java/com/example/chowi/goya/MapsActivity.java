@@ -2,6 +2,8 @@ package com.example.chowi.goya;
 
 import android.Manifest;
 import android.app.ActionBar;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
@@ -128,10 +130,50 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         EventItem newItem = new EventItem(title, desc, currentLatitude, currentLongitude, 0, 0, imageID);
 
+        Uri selectedImage = encodedImage;
+
+        InputStream imageStream = null;
+        try {
+            imageStream = getContentResolver().openInputStream(
+                    selectedImage);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Bitmap bmp = BitmapFactory.decodeStream(imageStream);
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        try {
+            stream.close();
+            stream = null;
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+
+        StorageReference uploadRef = mStorageRef.child(imageID);
+
+        UploadTask uploadTask = uploadRef.putBytes(byteArray);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Log.i("failure", "failed to upload uri");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.i("success", "posted it successfully!");
+
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+            }
+        });
 
 
-
-
+        /*
         StorageReference riversRef = mStorageRef.child(imageID);
 
 
@@ -153,7 +195,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Log.i("failure", "failed to upload uri");
 
                     }
-                });
+                });*/
 
 
 
