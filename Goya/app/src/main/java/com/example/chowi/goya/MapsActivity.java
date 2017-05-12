@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ActionBar;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
@@ -142,6 +143,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Bitmap bmp = BitmapFactory.decodeStream(imageStream);
 
+        if (bmp.getWidth() > bmp.getHeight()) {
+            Matrix matrix = new Matrix();
+            matrix.postRotate(90);
+            bmp = Bitmap.createBitmap(bmp , 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+        }
+
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 50, stream);
         byte[] byteArray = stream.toByteArray();
@@ -221,6 +228,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivity(getIntent());
     }
 
+    /*
+    public void fixOrientation() {
+        if (mBitmap.getWidth() > mBitmap.getHeight()) {
+            Matrix matrix = new Matrix();
+            matrix.postRotate(90);
+            mBitmap = Bitmap.createBitmap(mBitmap , 0, 0, mBitmap.getWidth(), mBitmap.getHeight(), matrix, true);
+        }
+    }
+    */
 
     public byte[] getBytes(InputStream inputStream) throws IOException {
         ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();

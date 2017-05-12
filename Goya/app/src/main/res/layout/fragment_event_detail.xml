@@ -17,19 +17,13 @@
             android:layout_height="wrap_content"
             android:padding="10dp">
 
-            <TextView
-                android:id="@+id/add_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Title: "
-                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/title_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#040404"
-                android:textSize="15dip"
+                android:textSize="26sp"
                 android:textStyle="bold"
                 android:typeface="sans" />
 
@@ -38,30 +32,31 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:padding="10dp">
 
             <TextView
-                android:id="@+id/add_desc"
-                android:layout_width="wrap_content"
+                android:id="@+id/event_author"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Desc: "
+                android:layout_weight="1"
+                android:text="sunhok"
                 android:textAlignment="center"/>
 
             <TextView
-                android:id="@+id/desc_text"
+                android:id="@+id/event_votes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#040404"
-                android:textSize="15dip"
-                android:textStyle="bold"
-                android:typeface="sans" />
+                android:layout_weight="1"
+                android:text="217 votes"
+                android:textAlignment="center" />
 
         </LinearLayout>
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="300sp"
             android:padding="10dp">
 
 

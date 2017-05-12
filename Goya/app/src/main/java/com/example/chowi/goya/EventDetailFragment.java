@@ -90,7 +90,7 @@ public class EventDetailFragment extends Fragment {
             String[] data = bundle.getStringArray("data");
 
             mTitleText.setText(data[0]);
-            mDescText.setText(data[1]);
+            //mDescText.setText(data[1]);
 
             if (data[2] != null) {
                 Log.i(data[2], "here is data2");
