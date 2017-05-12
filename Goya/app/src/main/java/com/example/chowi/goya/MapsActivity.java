@@ -124,10 +124,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         String uniqueID = UUID.randomUUID().toString();
         Log.i("uniqueid is", uniqueID);
-
-        EventItem newItem = new EventItem(title, desc, currentLatitude, currentLongitude, 0, 0, uniqueID);
-
         String imageID = "images/" + uniqueID;
+
+        EventItem newItem = new EventItem(title, desc, currentLatitude, currentLongitude, 0, 0, imageID);
+
+
 
 
 

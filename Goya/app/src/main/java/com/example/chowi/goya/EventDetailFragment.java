@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
@@ -21,6 +22,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 
@@ -47,6 +53,8 @@ public class EventDetailFragment extends Fragment {
     private TextView mDescText;
 
     private ImageView mImageView;
+
+    private StorageReference mStorageRef;
 
     private Bitmap mBitmap = null;
 
@@ -85,11 +93,56 @@ public class EventDetailFragment extends Fragment {
             mDescText.setText(data[1]);
 
             if (data[2] != null) {
-                Bitmap image = StringToBitMap(data[2]);
-                mImageView.setImageBitmap(image);
+                Log.i(data[2], "here is data2");
+                // Create a storage reference from our app
+                mStorageRef = FirebaseStorage.getInstance().getReference();
+
+                StorageReference currRef = mStorageRef.child(data[2]);
+
+
+                /*
+                mStorageRef.child(data[2]).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        // Got the download URL for 'users/me/profile.png'
+                        Log.i("got the download uri", "here it is");
+                        mImageView.setImageURI(uri);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.i("uri retrieval failure", "could not get it");
+                        // Handle any errors
+                    }
+                });*/
+
+                // working but slow byte method for donwload
+                final long ONE_MEGABYTE = 1024 * 1024;
+                currRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        Log.i("found in the database", "displaying it now");
+                        // Data for "images/island.jpg" is returns, use this as needed
+                        setImageViewWithByteArray(mImageView, bytes);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle any errors
+                        Log.i("did not find in db", "error");
+                    }
+                });
+
+
+
             }
 
         }
+    }
+
+    public static void setImageViewWithByteArray(ImageView view, byte[] data) {
+        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+        view.setImageBitmap(bitmap);
     }
 
     public void setText(String url) {
