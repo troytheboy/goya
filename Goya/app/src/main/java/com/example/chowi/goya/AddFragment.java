@@ -203,6 +203,8 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
             if (imageToUploadUri != null) {
                 Uri selectedImage = imageToUploadUri;
+
+
                 Bitmap imageBitmap = uriToBitmap(selectedImage);
 
                 mBitmap = imageBitmap;
@@ -215,38 +217,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
             }
 
         }
-/*
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
-            if(imageToUploadUri != null){
-                Uri selectedImage = imageToUploadUri;
-                getContext().getContentResolver().notifyChange(selectedImage, null);
-                Bitmap reducedSizeBitmap = getBitmap(imageToUploadUri.getPath());
-                Log.i(imageToUploadUri.getPath(), "image to uploaduri path");
-                if(reducedSizeBitmap != null){
-                    mImageView.setImageBitmap(reducedSizeBitmap);
-                    mTextView.setVisibility(View.GONE);
-                    mFAB.setVisibility(View.GONE);
 
-                    mImageView.setVisibility(View.VISIBLE);
-                }else{
-                    Log.i("Error1", "while capturing image");
-                }
-            }else{
-                Log.i("Error2","while capturing image");
-            }
-        }
-*/
-        //if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            //Bundle extras = data.getExtras();
-            //Bitmap imageBitmap = (Bitmap) extras.get("data");
-            //mBitmap = imageBitmap;
-            //mImageView.setImageBitmap(imageBitmap);
-
-            //mTextView.setVisibility(View.GONE);
-            //mFAB.setVisibility(View.GONE);
-
-            //mImageView.setVisibility(View.VISIBLE);
-        //}
     }
 
 
@@ -361,9 +332,10 @@ public class AddFragment extends Fragment implements View.OnClickListener {
             Toast.makeText(getContext(), "Enter a description", Toast.LENGTH_SHORT).show();
             // send text and reset field values
         } else {
-            String encodedImage = null;
-            if (mBitmap != null) {
-                encodedImage = BitMapToString(mBitmap);
+            Uri encodedImage = null;
+            if (imageToUploadUri != null) {
+                encodedImage = imageToUploadUri;
+                imageToUploadUri = null;
             }
             mCallback.onPostSelected(titleText, descText, encodedImage);
             titleEditText.setText("");
@@ -376,7 +348,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
 
     // Container Activity must implement this interface
     public interface OnHeadlineSelectedListener {
-        public void onPostSelected(String title, String desc, String encodedImage);
+        public void onPostSelected(String title, String desc, Uri encodedImage);
     }
 
     @Override

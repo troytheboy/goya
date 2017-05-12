@@ -2,6 +2,7 @@ package com.example.chowi.goya;
 
 import android.Manifest;
 import android.app.ActionBar;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -49,17 +50,29 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
+import java.util.UUID;
 
 import static android.R.attr.button;
 import static android.R.attr.data;
@@ -96,7 +109,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return null;
     }
 
-    public void onPostSelected(String title, String desc, String encodedImage) {
+    public void onPostSelected(String title, String desc, Uri encodedImage) {
         // The user selected the headline of an article from the HeadlinesFragment
         // Do something here to display that article
         Log.i("hello", "article selected now!");
@@ -106,7 +119,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng currentLatLng = new LatLng(currentLatitude, currentLongitude);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        EventItem newItem = new EventItem(title, desc, currentLatitude, currentLongitude, 0, 0, encodedImage);
+
+        Uri file = encodedImage;
+
+        String uniqueID = UUID.randomUUID().toString();
+        Log.i("uniqueid is", uniqueID);
+
+        EventItem newItem = new EventItem(title, desc, currentLatitude, currentLongitude, 0, 0, uniqueID);
+
+        String imageID = "images/" + uniqueID;
+
+
+
+        StorageReference riversRef = mStorageRef.child(imageID);
+
+
+        riversRef.putFile(file)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Get a URL to the uploaded content
+                        Log.i("success", "posted it successfully!");
+
+                        @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        // ...
+                        Log.i("failure", "failed to upload uri");
+
+                    }
+                });
+
+
+
 
 
         // Generate a reference to a new location and add some data using push()
@@ -126,6 +175,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
     }
 
+
+    public byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+        return byteBuffer.toByteArray();
+    }
+
+
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
@@ -140,6 +203,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FragmentManager mManager;
 
     private static final int MY_PERMISSIONS_REQUEST_CAMERA = 0;
+
+    private StorageReference mStorageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,6 +268,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // set Fragment Arguments
         Fragmentclass fragobj = new Fragmentclass();
         fragobj.setArguments(bundle);*/
+
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+
 
         BottomToolbarFragment frg2=new BottomToolbarFragment();//create the fragment instance for the bottom fragment
 
