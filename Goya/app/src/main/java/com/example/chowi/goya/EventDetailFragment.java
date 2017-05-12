@@ -6,6 +6,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -123,6 +125,7 @@ public class EventDetailFragment extends Fragment {
                     public void onSuccess(byte[] bytes) {
                         Log.i("found in the database", "displaying it now");
                         // Data for "images/island.jpg" is returns, use this as needed
+
                         setImageViewWithByteArray(mImageView, bytes);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -142,7 +145,18 @@ public class EventDetailFragment extends Fragment {
 
     public static void setImageViewWithByteArray(ImageView view, byte[] data) {
         Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-        view.setImageBitmap(bitmap);
+
+        /* how do i do this?
+        ExifInterface exif = new ExifInterface(data);
+        orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+        */
+
+        Matrix matrix = new Matrix();
+        matrix.postRotate(-90);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+
+        view.setImageBitmap(rotatedBitmap);
     }
 
     public void setText(String url) {

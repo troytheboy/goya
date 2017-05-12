@@ -5,6 +5,7 @@ import android.app.ActionBar;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
@@ -125,6 +126,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Uri file = encodedImage;
 
+
+
         String uniqueID = UUID.randomUUID().toString();
         Log.i("uniqueid is", uniqueID);
         String imageID = "images/" + uniqueID;
@@ -143,11 +146,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Bitmap bmp = BitmapFactory.decodeStream(imageStream);
 
-        if (bmp.getWidth() > bmp.getHeight()) {
-            Matrix matrix = new Matrix();
-            matrix.postRotate(90);
-            bmp = Bitmap.createBitmap(bmp , 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
-        }
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 50, stream);
