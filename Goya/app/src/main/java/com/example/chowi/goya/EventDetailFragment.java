@@ -52,7 +52,7 @@ public class EventDetailFragment extends Fragment {
     //PackageManager pm = getActivity().getPackageManager();
 
     private TextView mTitleText;
-    private TextView mDescText;
+    private TextView mAuthorText;
 
     private ImageView mImageView;
 
@@ -73,7 +73,7 @@ public class EventDetailFragment extends Fragment {
 
 
         mTitleText = (TextView) view.findViewById(R.id.title_text);
-        mDescText = (TextView) view.findViewById(R.id.desc_text);
+        mAuthorText = (TextView) view.findViewById(R.id.event_author);
 
         mImageView = (ImageView) view.findViewById(R.id.cam_image);
 
@@ -92,7 +92,8 @@ public class EventDetailFragment extends Fragment {
             String[] data = bundle.getStringArray("data");
 
             mTitleText.setText(data[0]);
-            //mDescText.setText(data[1]);
+            mAuthorText.setText(data[1]);
+
 
             if (data[2] != null) {
                 Log.i(data[2], "here is data2");
