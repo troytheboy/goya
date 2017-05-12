@@ -78,6 +78,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.UUID;
 
+import static android.R.attr.backgroundStacked;
 import static android.R.attr.button;
 import static android.R.attr.data;
 import static android.R.attr.mode;
@@ -148,7 +149,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+        bmp.compress(Bitmap.CompressFormat.JPEG, 20, stream);
         byte[] byteArray = stream.toByteArray();
         try {
             stream.close();
@@ -441,6 +442,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         frg2.setArguments(bundle);
 
         FragmentManager manager= getSupportFragmentManager();//create an instance of fragment manager
+        manager.popBackStack();
 
         FragmentTransaction transaction=manager.beginTransaction();//create an instance of Fragment-transaction
 

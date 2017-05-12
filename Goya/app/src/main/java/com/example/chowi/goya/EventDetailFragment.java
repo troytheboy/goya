@@ -150,14 +150,14 @@ public class EventDetailFragment extends Fragment {
         //ExifInterface exif = new ExifInterface(data);
         //orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
 
-
+        /*
         Matrix matrix = new Matrix();
         matrix.postRotate(-90);
         Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 
 
-        view.setImageBitmap(rotatedBitmap);
-        //view.setImageBitmap(bitmap);
+        view.setImageBitmap(rotatedBitmap);*/
+        view.setImageBitmap(bitmap);
     }
 
     public void setText(String url) {
