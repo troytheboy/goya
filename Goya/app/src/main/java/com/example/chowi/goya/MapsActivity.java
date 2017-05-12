@@ -143,7 +143,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Bitmap bmp = BitmapFactory.decodeStream(imageStream);
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bmp.compress(Bitmap.CompressFormat.JPEG, 0, stream);
         byte[] byteArray = stream.toByteArray();
         try {
             stream.close();
