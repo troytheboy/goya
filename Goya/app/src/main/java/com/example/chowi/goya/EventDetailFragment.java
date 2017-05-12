@@ -146,10 +146,10 @@ public class EventDetailFragment extends Fragment {
     public static void setImageViewWithByteArray(ImageView view, byte[] data) {
         Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
 
-        /* how do i do this?
-        ExifInterface exif = new ExifInterface(data);
-        orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-        */
+
+        //ExifInterface exif = new ExifInterface(data);
+        //orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+
 
         Matrix matrix = new Matrix();
         matrix.postRotate(-90);
@@ -157,6 +157,7 @@ public class EventDetailFragment extends Fragment {
 
 
         view.setImageBitmap(rotatedBitmap);
+        //view.setImageBitmap(bitmap);
     }
 
     public void setText(String url) {
