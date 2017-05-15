@@ -1,31 +1,32 @@
 package com.example.chowi.goya;
 
 import android.media.Image;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by chowi on 4/14/2017.
  */
 
-public class EventItem {
-    private String id, title, description;
-    private double latitude, longitude, displayValue;
-    private int goVotes, noVotes;
+public class EventItem implements Parcelable {
+    private String id;
+    private String title;
+    private String description;
+    private double latitude;
+    private double longitude;
+    private int goVotes;
+    private int noVotes;
     private String image;
 
 
     public EventItem() {
     }
 
-    public EventItem(String id, String title, String description) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.goVotes = 0;
-        this.noVotes = 0;
-    }
 
-    public EventItem(String title, String description, double latitude, double longitude, int goVotes, int noVotes, String image) {
+
+    public EventItem(String id, String title, String description, double latitude, double longitude, int goVotes, int noVotes, String image) {
         super();
+        this.id = id;
         this.title = title;
         this.description = description;
         this.latitude = latitude;
@@ -35,10 +36,8 @@ public class EventItem {
         this.image = image;
     }
 
-
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
-
 
     public String getTitle() {
         return title;
@@ -64,10 +63,6 @@ public class EventItem {
     public void setLongitude(double longitude) { this.longitude = longitude; }
 
 
-    public double getDisplayValue() { return displayValue; }
-    public void setDisplayValue(double displayValue) { this.displayValue = displayValue; }
-
-
     public int getGoVotes() { return goVotes; }
     public void setGoVotes(int goVotes) { this.goVotes = goVotes; }
 
@@ -79,5 +74,50 @@ public class EventItem {
     public void setImage(String image) { this.image = image; }
 
 
+    public String toString() {
+        return "title: " + this.title + "  description: " + this.description + "  latitude: " + this.latitude
+                + "  longitude: " + this.longitude + "  govotes: " + this.goVotes + "  novotes: " + this.noVotes
+                + "  image: " + this.image;
+    }
 
+    protected EventItem(Parcel in) {
+        id = in.readString();
+        title = in.readString();
+        description = in.readString();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
+        goVotes = in.readInt();
+        noVotes = in.readInt();
+        image = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(title);
+        dest.writeString(description);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
+        dest.writeInt(goVotes);
+        dest.writeInt(noVotes);
+        dest.writeString(image);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<EventItem> CREATOR = new Parcelable.Creator<EventItem>() {
+        @Override
+        public EventItem createFromParcel(Parcel in) {
+            return new EventItem(in);
+        }
+
+        @Override
+        public EventItem[] newArray(int size) {
+            return new EventItem[size];
+        }
+    };
 }

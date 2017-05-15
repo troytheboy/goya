@@ -10,6 +10,7 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -21,17 +22,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 
+import static android.R.attr.data;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.POWER_SERVICE;
 
@@ -53,10 +61,15 @@ public class EventDetailFragment extends Fragment {
 
     private TextView mTitleText;
     private TextView mAuthorText;
+    private TextView mVoteText;
 
     private ImageView mImageView;
 
     private StorageReference mStorageRef;
+
+    private DatabaseReference mDatabase;
+
+    private EventItem mEventItem;
 
     private Bitmap mBitmap = null;
 
@@ -74,6 +87,7 @@ public class EventDetailFragment extends Fragment {
 
         mTitleText = (TextView) view.findViewById(R.id.title_text);
         mAuthorText = (TextView) view.findViewById(R.id.event_author);
+        mVoteText = (TextView) view.findViewById(R.id.event_votes);
 
         mImageView = (ImageView) view.findViewById(R.id.cam_image);
 
@@ -87,61 +101,82 @@ public class EventDetailFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Bundle bundle = getArguments();
+        Bundle bundle = this.getArguments();
+        mEventItem = null;
         if (bundle != null) {
-            String[] data = bundle.getStringArray("data");
+            mEventItem = bundle.getParcelable("item");
+        }
 
-            mTitleText.setText(data[0]);
-            mAuthorText.setText(data[1]);
+        mTitleText.setText(mEventItem.getTitle());
+        mAuthorText.setText(mEventItem.getDescription());
+        mVoteText.setText(mEventItem.getGoVotes() - mEventItem.getNoVotes() + " GoVotes");
 
+        if (mEventItem.getImage() != null) {
+            mStorageRef = FirebaseStorage.getInstance().getReference();
 
-            if (data[2] != null) {
-                Log.i(data[2], "here is data2");
-                // Create a storage reference from our app
-                mStorageRef = FirebaseStorage.getInstance().getReference();
+            StorageReference currRef = mStorageRef.child(mEventItem.getImage());
 
-                StorageReference currRef = mStorageRef.child(data[2]);
+            final long ONE_MEGABYTE = 1024 * 1024;
+            currRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    Log.i("found in the database", "displaying it now");
+                    // Data for "images/island.jpg" is returns, use this as needed
 
+                    setImageViewWithByteArray(mImageView, bytes);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                    Log.i("did not find in db", "error");
+                }
+            });
+        }
 
-                /*
-                mStorageRef.child(data[2]).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        // Got the download URL for 'users/me/profile.png'
-                        Log.i("got the download uri", "here it is");
-                        mImageView.setImageURI(uri);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.i("uri retrieval failure", "could not get it");
-                        // Handle any errors
-                    }
-                });*/
-
-                // working but slow byte method for donwload
-                final long ONE_MEGABYTE = 1024 * 1024;
-                currRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                    @Override
-                    public void onSuccess(byte[] bytes) {
-                        Log.i("found in the database", "displaying it now");
-                        // Data for "images/island.jpg" is returns, use this as needed
-
-                        setImageViewWithByteArray(mImageView, bytes);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle any errors
-                        Log.i("did not find in db", "error");
-                    }
-                });
+        ImageButton buttonGovote = (ImageButton) getActivity().findViewById(R.id.btn_govote);
+        buttonGovote.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.i("clicking govote!", "govote being pressed");
 
 
+                mEventItem.setGoVotes(mEventItem.getGoVotes() + 1);
+
+
+                mVoteText.setText(mEventItem.getGoVotes() - mEventItem.getNoVotes() + " GoVotes");
+
+
+                mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
+                mDatabase.child("events").child(mEventItem.getId()).child("goVotes").setValue(mEventItem.getGoVotes());
 
             }
+        });
 
-        }
+        ImageButton buttonNovote = (ImageButton) getActivity().findViewById(R.id.btn_novote);
+        buttonNovote.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.i("clicking novote!", "novote being pressed");
+
+
+                mEventItem.setNoVotes(mEventItem.getNoVotes() + 1);
+
+
+                mVoteText.setText(mEventItem.getGoVotes() - mEventItem.getNoVotes() + " GoVotes");
+
+
+                mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
+                mDatabase.child("events").child(mEventItem.getId()).child("noVotes").setValue(mEventItem.getNoVotes());
+
+            }
+        });
+
+
+
+
     }
 
     public static void setImageViewWithByteArray(ImageView view, byte[] data) {

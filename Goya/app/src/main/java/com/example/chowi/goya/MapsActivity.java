@@ -133,7 +133,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.i("uniqueid is", uniqueID);
         String imageID = "images/" + uniqueID;
 
-        EventItem newItem = new EventItem(title, desc, currentLatitude, currentLongitude, 0, 0, imageID);
+
+
+        EventItem newItem = new EventItem(null, title, desc, currentLatitude, currentLongitude, 0, 0, imageID);
 
         Uri selectedImage = encodedImage;
 
@@ -209,9 +211,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Generate a reference to a new location and add some data using push()
         //Create new reference        calling push creates the unique key in firebase database but has no data yet
+
         DatabaseReference mypostref = mDatabase.push();
         //mypostref.setValue(data);
         String newKey = mypostref.getKey();
+        newItem.setId(newKey);
 
 
         mDatabase.child("events").child(newKey).setValue(newItem);
@@ -285,6 +289,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Finally, let's add the Toolbar
         Toolbar toolbar= (Toolbar) findViewById(R.id.my_toolbar);
         delegate.setSupportActionBar(toolbar);
+
+
 
         // Assume thisActivity is the current activity
         int permissionCheck = ContextCompat.checkSelfPermission(this,
@@ -428,13 +434,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         EventItem eventItem = (EventItem) marker.getTag();
 
         // Check if a click count was set, then display the click count.
-        Log.i("eventitem thing", eventItem.getImage());
+        Log.i("eventItem thing", eventItem.getImage());
 
 
         String[] postData = {eventItem.getTitle(), eventItem.getDescription(), eventItem.getImage()};
 
         Bundle bundle = new Bundle();
-        bundle.putStringArray("data", postData);
+        Log.i("eventitem", eventItem.toString());
+        //bundle.putStringArray("data", postData);
+        bundle.putParcelable("item", eventItem);
         // set Fragmentclass Arguments
 
 
@@ -451,6 +459,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         transaction.addToBackStack(null);
 
         transaction.commit();
+
+
 
 
 

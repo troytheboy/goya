@@ -43,6 +43,8 @@
 
         <activity
             android:name=".MapsActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_maps">
 
             <intent-filter>
@@ -56,12 +58,16 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
 
         </activity>
         <activity
             android:name=".SignupActivity"
             android:label="@string/title_activity_signup"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <provider
