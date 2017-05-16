@@ -80,7 +80,7 @@ public class EventDetailFragment extends Fragment {
 
     private Bundle bundle = this.getArguments();
 
-    private String mUsername = "chow";
+    private String mUsername;
 
 
     @Override
@@ -108,8 +108,10 @@ public class EventDetailFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         Bundle bundle = this.getArguments();
         mEventItem = null;
+        mUsername = null;
         if (bundle != null) {
             mEventItem = bundle.getParcelable("item");
+            mUsername = bundle.getString("username");
         }
 
         mTitleText.setText(mEventItem.getTitle());

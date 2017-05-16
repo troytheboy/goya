@@ -273,8 +273,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private StorageReference mStorageRef;
 
-    //private String mUsername;
-    private String mUsername = "chow";
+    private String mUsername;
+    //private String mUsername = "chow";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -421,7 +421,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Marker currentMarker =  mMap.addMarker(new MarkerOptions()
                                     .position(currentItemLatLng)
                                     .title(eventItem.getTitle())
-                                    .snippet(eventItem.getDescription())
                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
                             currentMarker.setTag(eventItem);
 
@@ -453,6 +452,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.i("eventitem", eventItem.toString());
         //bundle.putStringArray("data", postData);
         bundle.putParcelable("item", eventItem);
+        bundle.putString("username", mUsername);
         // set Fragmentclass Arguments
 
 
