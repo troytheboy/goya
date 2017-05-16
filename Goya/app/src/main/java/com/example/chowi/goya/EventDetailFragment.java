@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -40,8 +41,10 @@ import com.google.firebase.storage.StorageReference;
 import java.io.ByteArrayOutputStream;
 
 import static android.R.attr.data;
+import static android.R.attr.password;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.POWER_SERVICE;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 
 /**
@@ -77,6 +80,8 @@ public class EventDetailFragment extends Fragment {
 
     private Bundle bundle = this.getArguments();
 
+    private String mUsername = "chow";
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -108,7 +113,7 @@ public class EventDetailFragment extends Fragment {
         }
 
         mTitleText.setText(mEventItem.getTitle());
-        mAuthorText.setText(mEventItem.getDescription());
+        mAuthorText.setText(mEventItem.getUsername());
         mVoteText.setText(mEventItem.getGoVotes() - mEventItem.getNoVotes() + " GoVotes");
 
         if (mEventItem.getImage() != null) {
@@ -134,22 +139,56 @@ public class EventDetailFragment extends Fragment {
             });
         }
 
+
+
         ImageButton buttonGovote = (ImageButton) getActivity().findViewById(R.id.btn_govote);
         buttonGovote.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.i("clicking govote!", "govote being pressed");
 
-
-                mEventItem.setGoVotes(mEventItem.getGoVotes() + 1);
-
-
-                mVoteText.setText(mEventItem.getGoVotes() - mEventItem.getNoVotes() + " GoVotes");
-
-
                 mDatabase = FirebaseDatabase.getInstance().getReference();
 
+                mDatabase.child("accounts").child(mUsername).child("voted").child(mEventItem.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
 
-                mDatabase.child("events").child(mEventItem.getId()).child("goVotes").setValue(mEventItem.getGoVotes());
+                        if (snapshot.getValue() != null) {
+                            Long votes = (Long) snapshot.getValue();
+                            if (votes == -1) {
+                                mEventItem.setGoVotes(mEventItem.getGoVotes() + 2);
+                                mVoteText.setText(mEventItem.getGoVotes() - mEventItem.getNoVotes() + " GoVotes");
+                                mDatabase.child("events").child(mEventItem.getId()).child("goVotes").setValue(mEventItem.getGoVotes());
+                                mDatabase.child("accounts").child(mUsername).child("voted").child(mEventItem.getId()).setValue(1);
+                            } else if (votes == 0) {
+                                mEventItem.setGoVotes(mEventItem.getGoVotes() + 1);
+                                mVoteText.setText(mEventItem.getGoVotes() - mEventItem.getNoVotes() + " GoVotes");
+                                mDatabase.child("events").child(mEventItem.getId()).child("goVotes").setValue(mEventItem.getGoVotes());
+                                mDatabase.child("accounts").child(mUsername).child("voted").child(mEventItem.getId()).setValue(1);
+                            } else if (votes == 1) {
+                                mEventItem.setGoVotes(mEventItem.getGoVotes() - 1);
+                                mVoteText.setText(mEventItem.getGoVotes() - mEventItem.getNoVotes() + " GoVotes");
+                                mDatabase.child("events").child(mEventItem.getId()).child("goVotes").setValue(mEventItem.getGoVotes());
+                                mDatabase.child("accounts").child(mUsername).child("voted").child(mEventItem.getId()).setValue(0);
+                            }
+                        } else {
+                            mEventItem.setGoVotes(mEventItem.getGoVotes() + 1);
+                            mVoteText.setText(mEventItem.getGoVotes() - mEventItem.getNoVotes() + " GoVotes");
+                            mDatabase.child("events").child(mEventItem.getId()).child("goVotes").setValue(mEventItem.getGoVotes());
+                            mDatabase.child("accounts").child(mUsername).child("voted").child(mEventItem.getId()).setValue(1);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+
+                });
+
+
+
+
+
 
             }
         });
@@ -159,19 +198,49 @@ public class EventDetailFragment extends Fragment {
             public void onClick(View v) {
                 Log.i("clicking novote!", "novote being pressed");
 
-
-                mEventItem.setNoVotes(mEventItem.getNoVotes() + 1);
-
-
-                mVoteText.setText(mEventItem.getGoVotes() - mEventItem.getNoVotes() + " GoVotes");
-
-
                 mDatabase = FirebaseDatabase.getInstance().getReference();
 
+                mDatabase.child("accounts").child(mUsername).child("voted").child(mEventItem.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
 
-                mDatabase.child("events").child(mEventItem.getId()).child("noVotes").setValue(mEventItem.getNoVotes());
+                        if (snapshot.getValue() != null) {
+                            Long votes = (Long) snapshot.getValue();
+                            if (votes == -1) {
+                                mEventItem.setGoVotes(mEventItem.getGoVotes() + 1);
+                                mVoteText.setText(mEventItem.getGoVotes() - mEventItem.getNoVotes() + " GoVotes");
+                                mDatabase.child("events").child(mEventItem.getId()).child("goVotes").setValue(mEventItem.getGoVotes());
+                                mDatabase.child("accounts").child(mUsername).child("voted").child(mEventItem.getId()).setValue(0);
+                            } else if (votes == 0) {
+                                mEventItem.setGoVotes(mEventItem.getGoVotes() - 1);
+                                mVoteText.setText(mEventItem.getGoVotes() - mEventItem.getNoVotes() + " GoVotes");
+                                mDatabase.child("events").child(mEventItem.getId()).child("goVotes").setValue(mEventItem.getGoVotes());
+                                mDatabase.child("accounts").child(mUsername).child("voted").child(mEventItem.getId()).setValue(-1);
+                            } else if (votes == 1) {
+                                mEventItem.setGoVotes(mEventItem.getGoVotes() - 2);
+                                mVoteText.setText(mEventItem.getGoVotes() - mEventItem.getNoVotes() + " GoVotes");
+                                mDatabase.child("events").child(mEventItem.getId()).child("goVotes").setValue(mEventItem.getGoVotes());
+                                mDatabase.child("accounts").child(mUsername).child("voted").child(mEventItem.getId()).setValue(-1);
+                            }
+                        } else {
+                            mEventItem.setGoVotes(mEventItem.getGoVotes() - 1);
+                            mVoteText.setText(mEventItem.getGoVotes() - mEventItem.getNoVotes() + " GoVotes");
+                            mDatabase.child("events").child(mEventItem.getId()).child("goVotes").setValue(mEventItem.getGoVotes());
+                            mDatabase.child("accounts").child(mUsername).child("voted").child(mEventItem.getId()).setValue(-1);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+
+                });
+
+
 
             }
+
         });
 
 

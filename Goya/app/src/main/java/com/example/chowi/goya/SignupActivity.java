@@ -70,7 +70,7 @@ public class SignupActivity extends AppCompatActivity {
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
 
-        final String name = _nameText.getText().toString();
+        final String username = _nameText.getText().toString();
         final String email = _emailText.getText().toString();
         final String password = _passwordText.getText().toString();
 
@@ -83,10 +83,11 @@ public class SignupActivity extends AppCompatActivity {
                         // depending on success
 
                         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-                        AccountItem newAccount = new AccountItem(name, email, password);
+                        AccountItem newAccount = new AccountItem(username, email, password);
                         DatabaseReference mypostref = mDatabase.push();
-                        String newKey = mypostref.getKey();
-                        mDatabase.child("accounts").child(newKey).setValue(newAccount);
+                        //String newKey = mypostref.getKey();
+                        //mDatabase.child("accounts").child(newKey).setValue(newAccount);
+                        mDatabase.child("accounts").child(username).setValue(newAccount);
                         Log.i("account created", "i think");
                         onSignupSuccess();
 

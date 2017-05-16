@@ -2,6 +2,7 @@ package com.example.chowi.goya;
 
 import static android.R.attr.id;
 import static android.R.attr.password;
+import static android.R.attr.userVisible;
 
 /**
  * Created by chowi on 4/15/2017.
@@ -9,7 +10,7 @@ import static android.R.attr.password;
 
 
 public class AccountItem {
-    private String name;
+    private String username;
     private String email;
     private String password;
 
@@ -18,17 +19,17 @@ public class AccountItem {
 
     }
 
-    public AccountItem(String name, String email, String password) {
+    public AccountItem(String username, String email, String password) {
         super();
-        this.name = name;
+        this.username = username;
         this.email = email;
         this.password = password;
     }
 
 
-    public String getName() { return name; }
+    public String getUsername() { return username; }
 
-    public void setName(String name) { this.name = name; }
+    public void setUsername(String username) { this.username = username; }
 
     public String getEmail() {
         return email;

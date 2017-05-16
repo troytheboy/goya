@@ -17,6 +17,7 @@ public class EventItem implements Parcelable {
     private int goVotes;
     private int noVotes;
     private String image;
+    private String username;
 
 
     public EventItem() {
@@ -24,7 +25,7 @@ public class EventItem implements Parcelable {
 
 
 
-    public EventItem(String id, String title, String description, double latitude, double longitude, int goVotes, int noVotes, String image) {
+    public EventItem(String id, String title, String description, double latitude, double longitude, int goVotes, int noVotes, String image, String username) {
         super();
         this.id = id;
         this.title = title;
@@ -34,6 +35,7 @@ public class EventItem implements Parcelable {
         this.goVotes = goVotes;
         this.noVotes = noVotes;
         this.image = image;
+        this.username = username;
     }
 
     public String getId() { return id; }
@@ -73,6 +75,9 @@ public class EventItem implements Parcelable {
     public String getImage() { return image; }
     public void setImage(String image) { this.image = image; }
 
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
 
     public String toString() {
         return "title: " + this.title + "  description: " + this.description + "  latitude: " + this.latitude
@@ -89,6 +94,7 @@ public class EventItem implements Parcelable {
         goVotes = in.readInt();
         noVotes = in.readInt();
         image = in.readString();
+        username = in.readString();
     }
 
     @Override
@@ -106,6 +112,7 @@ public class EventItem implements Parcelable {
         dest.writeInt(goVotes);
         dest.writeInt(noVotes);
         dest.writeString(image);
+        dest.writeString(username);
     }
 
     @SuppressWarnings("unused")

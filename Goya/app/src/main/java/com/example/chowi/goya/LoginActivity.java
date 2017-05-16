@@ -32,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final int REQUEST_MAPS = 0;
 
     private boolean loginValid = false;
+    private String mUsername = null;
 
     @InjectView(R.id.input_email) EditText _emailText;
     @InjectView(R.id.input_password) EditText _passwordText;
@@ -93,9 +94,10 @@ public class LoginActivity extends AppCompatActivity {
                             AccountItem currentAccount = snapshot.getValue(AccountItem.class);
                             String currEmail = currentAccount.getEmail();
                             String currPass = currentAccount.getPassword();
-                            Log.i("curr account", currEmail + " " + currPass + " " + currentAccount.getName());
+                            Log.i("curr account", currEmail + " " + currPass + " " + currentAccount.getUsername());
                             if (email.equals(currentAccount.getEmail()) && password.equals(currentAccount.getPassword())) {
                                 loginValid = true;
+                                mUsername = currentAccount.getUsername();
                             }
                         }
                     }
@@ -125,9 +127,10 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
 
-
                 // TODO: Implement successful signup logic here
                 // By default we just finish the Activity and log them in automatically
+
+
                 this.finish();
             }
         }
@@ -142,6 +145,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        intent.putExtra("username", mUsername);
         startActivityForResult(intent, REQUEST_MAPS);
 
         finish();

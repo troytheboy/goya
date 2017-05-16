@@ -135,7 +135,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-        EventItem newItem = new EventItem(null, title, desc, currentLatitude, currentLongitude, 0, 0, imageID);
+        EventItem newItem = new EventItem(null, title, desc, currentLatitude, currentLongitude, 0, 0, imageID, mUsername);
 
         Uri selectedImage = encodedImage;
 
@@ -220,6 +220,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mDatabase.child("events").child(newKey).setValue(newItem);
 
+        mDatabase.child("accounts").child(mUsername).child("events").child(newItem.getId()).setValue(newItem);
+
 
         mMap.addMarker(new MarkerOptions()
                 .position(currentLatLng)
@@ -271,11 +273,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private StorageReference mStorageRef;
 
+    //private String mUsername;
+    private String mUsername = "chow";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(activity_maps);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            mUsername = extras.getString("username");
+            Log.i("current username is", mUsername);
+        }
 
         //let's create the delegate, passing the activity at both arguments (Activity, AppCompatCallback)
         delegate = AppCompatDelegate.create(this, this);
