@@ -2,14 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.chowi.goya.AddFragment">
+    android:background="#B1BCBE"
+    tools:context="com.example.chowi.goya.MapsActivity">
 
     <!-- TODO: Update blank fragment layout -->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorWhite"
+        android:background="@drawable/detail_bg"
         android:orientation="vertical">
 
         <LinearLayout
@@ -22,7 +23,7 @@
                 android:id="@+id/title_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#040404"
+                android:textColor="@color/colorPrimary"
                 android:textSize="10pt"
                 android:textStyle="bold"
                 android:textAlignment="center"
@@ -53,7 +54,6 @@
                 android:layout_weight="1"
                 android:text="217 votes"
                 android:textSize="8pt"
-                android:textColor="@color/colorPrimary"
                 android:textAlignment="center" />
 
         </LinearLayout>
@@ -61,18 +61,18 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="300sp"
+            android:layout_height="280dip"
             android:padding="5dp">
 
 
             <ImageView
                 android:id="@+id/cam_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
 
         </LinearLayout>
-        
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -88,11 +88,39 @@
 
                 <ImageButton
                     android:id="@+id/btn_govote"
-                    android:src="@drawable/ic_govote1"
+                    android:src="@drawable/ic_govote_empty1"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorWhite"
+                    android:tint="@color/colorPrimary"
                     android:layout_gravity="center" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:text="Comments"/>
+
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_comments"
+                    android:background="@color/colorWhite"
+                    android:tint="@color/colorPrimaryDark"
+                    />
+
+
+
 
             </LinearLayout>
 
@@ -106,10 +134,11 @@
 
                 <ImageButton
                     android:id="@+id/btn_novote"
-                    android:src="@drawable/ic_novote1"
-                    android:background="@color/colorAccent"
+                    android:src="@drawable/ic_novote_empty"
+                    android:background="@color/colorWhite"
+                    android:tint="@color/colorAccent"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center" />
 
             </LinearLayout>

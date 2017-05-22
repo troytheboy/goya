@@ -82,6 +82,10 @@ public class EventDetailFragment extends Fragment {
 
     private String mUsername;
 
+    private ImageButton btn_govote;
+
+    private ImageButton btn_novote;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -142,8 +146,35 @@ public class EventDetailFragment extends Fragment {
         }
 
 
+        final ImageButton buttonGovote = (ImageButton) getActivity().findViewById(R.id.btn_govote);
+        final ImageButton buttonNovote = (ImageButton) getActivity().findViewById(R.id.btn_novote);
 
-        ImageButton buttonGovote = (ImageButton) getActivity().findViewById(R.id.btn_govote);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        mDatabase.child("accounts").child(mUsername).child("voted").child(mEventItem.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                if (snapshot.getValue() != null) {
+                    Long votes = (Long) snapshot.getValue();
+                    if (votes == -1) {
+                        buttonNovote.setImageResource(R.drawable.ic_novote_full);
+                    } else if (votes == 1) {
+                        buttonGovote.setImageResource(R.drawable.ic_govote_full);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+
+
+
+
         buttonGovote.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.i("clicking govote!", "govote being pressed");
@@ -153,7 +184,8 @@ public class EventDetailFragment extends Fragment {
                 mDatabase.child("accounts").child(mUsername).child("voted").child(mEventItem.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
-
+                        buttonGovote.setImageResource(R.drawable.ic_govote_full);
+                        buttonNovote.setImageResource(R.drawable.ic_novote_empty);
                         if (snapshot.getValue() != null) {
                             Long votes = (Long) snapshot.getValue();
                             if (votes == -1) {
@@ -171,6 +203,7 @@ public class EventDetailFragment extends Fragment {
                                 mVoteText.setText(mEventItem.getGoVotes() - mEventItem.getNoVotes() + " GoVotes");
                                 mDatabase.child("events").child(mEventItem.getId()).child("goVotes").setValue(mEventItem.getGoVotes());
                                 mDatabase.child("accounts").child(mUsername).child("voted").child(mEventItem.getId()).setValue(0);
+                                buttonGovote.setImageResource(R.drawable.ic_govote_empty1);
                             }
                         } else {
                             mEventItem.setGoVotes(mEventItem.getGoVotes() + 1);
@@ -186,16 +219,9 @@ public class EventDetailFragment extends Fragment {
                     }
 
                 });
-
-
-
-
-
-
             }
         });
 
-        ImageButton buttonNovote = (ImageButton) getActivity().findViewById(R.id.btn_novote);
         buttonNovote.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.i("clicking novote!", "novote being pressed");
@@ -205,7 +231,8 @@ public class EventDetailFragment extends Fragment {
                 mDatabase.child("accounts").child(mUsername).child("voted").child(mEventItem.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
-
+                        buttonGovote.setImageResource(R.drawable.ic_govote_empty1);
+                        buttonNovote.setImageResource(R.drawable.ic_novote_full);
                         if (snapshot.getValue() != null) {
                             Long votes = (Long) snapshot.getValue();
                             if (votes == -1) {
@@ -213,6 +240,7 @@ public class EventDetailFragment extends Fragment {
                                 mVoteText.setText(mEventItem.getGoVotes() - mEventItem.getNoVotes() + " GoVotes");
                                 mDatabase.child("events").child(mEventItem.getId()).child("goVotes").setValue(mEventItem.getGoVotes());
                                 mDatabase.child("accounts").child(mUsername).child("voted").child(mEventItem.getId()).setValue(0);
+                                buttonNovote.setImageResource(R.drawable.ic_novote_empty);
                             } else if (votes == 0) {
                                 mEventItem.setGoVotes(mEventItem.getGoVotes() - 1);
                                 mVoteText.setText(mEventItem.getGoVotes() - mEventItem.getNoVotes() + " GoVotes");

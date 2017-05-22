@@ -274,6 +274,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private StorageReference mStorageRef;
 
     private String mUsername;
+
+
     //private String mUsername = "chow";
 
     @Override
@@ -298,7 +300,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Finally, let's add the Toolbar
         Toolbar toolbar= (Toolbar) findViewById(R.id.my_toolbar);
+        toolbar.setLogo(R.drawable.goya_full1);
         delegate.setSupportActionBar(toolbar);
+
 
 
 
@@ -358,6 +362,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         transaction.add(R.id.container2, frg2, "Frag_Bot");
 
         transaction.commit();
+
+
 
 
     }
@@ -464,11 +470,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         FragmentTransaction transaction=manager.beginTransaction();//create an instance of Fragment-transaction
 
-        transaction.add(R.id.container2, frg2, "Frag_Bot");
+        transaction.replace(R.id.container2, frg2, "Frag_Bot");
 
         transaction.addToBackStack(null);
 
         transaction.commit();
+
+
+
 
 
 
@@ -597,6 +606,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // User chose the "Settings" item, show the app settings UI...
                 Log.i("settings", "settings click");
                 return true;
+
 
             case R.id.action_profile:
                 // User chose the "Favorite" action, mark the current item

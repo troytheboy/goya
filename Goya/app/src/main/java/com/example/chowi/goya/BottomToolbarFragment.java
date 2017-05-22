@@ -1,6 +1,7 @@
 package com.example.chowi.goya;
 
 import android.content.Context;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 
@@ -32,7 +34,7 @@ public class BottomToolbarFragment extends Fragment implements View.OnClickListe
             View view = inflater.inflate(R.layout.fragment_bottom_toolbar,
                     container, false);
 
-            FloatingActionButton addButton = (FloatingActionButton) view.findViewById(R.id.fab_add);
+            ImageButton addButton = (ImageButton) view.findViewById(R.id.btn_add);
             addButton.setOnClickListener(this);
 
             return view;
@@ -42,7 +44,7 @@ public class BottomToolbarFragment extends Fragment implements View.OnClickListe
     public void onClick(View v) {
         //do what you want to do when button is clicked
         switch (v.getId()) {
-            case R.id.fab_add:
+            case R.id.btn_add:
                 Log.i("pressing this button", "pressing it");
                 AddFragment frg2=new AddFragment();//create the fragment instance for the bottom fragment
 
