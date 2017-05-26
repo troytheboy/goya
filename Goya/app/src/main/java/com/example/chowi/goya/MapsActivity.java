@@ -82,6 +82,7 @@ import static android.R.attr.backgroundStacked;
 import static android.R.attr.button;
 import static android.R.attr.data;
 import static android.R.attr.mode;
+import static android.R.attr.toolbarStyle;
 import static com.example.chowi.goya.R.id.add;
 import static com.example.chowi.goya.R.id.map;
 import static com.example.chowi.goya.R.layout.activity_maps;
@@ -300,7 +301,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Finally, let's add the Toolbar
         Toolbar toolbar= (Toolbar) findViewById(R.id.my_toolbar);
-        toolbar.setLogo(R.drawable.goya_full1);
+        toolbar.setLogo(R.drawable.goya_logo_dark_bg);
         delegate.setSupportActionBar(toolbar);
 
 
@@ -350,10 +351,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Fragmentclass fragobj = new Fragmentclass();
         fragobj.setArguments(bundle);*/
 
+
+        Bundle username = new Bundle();
+        username.putString("username", mUsername);
+
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
 
         BottomToolbarFragment frg2=new BottomToolbarFragment();//create the fragment instance for the bottom fragment
+        frg2.setArguments(username);
 
         FragmentManager manager=getSupportFragmentManager();//create an instance of fragment manager
 
@@ -448,11 +454,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Retrieve the data from the marker.
         EventItem eventItem = (EventItem) marker.getTag();
 
-        // Check if a click count was set, then display the click count.
-        Log.i("eventItem thing", eventItem.getImage());
-
-
-        String[] postData = {eventItem.getTitle(), eventItem.getDescription(), eventItem.getImage()};
 
         Bundle bundle = new Bundle();
         Log.i("eventitem", eventItem.toString());

@@ -28,14 +28,24 @@ import android.widget.TextView;
 public class BottomToolbarFragment extends Fragment implements View.OnClickListener {
         public static final String EXTRA_URL ="url";
 
+        private String mUsername;
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.fragment_bottom_toolbar,
                     container, false);
 
+
+
             ImageButton addButton = (ImageButton) view.findViewById(R.id.btn_add);
             addButton.setOnClickListener(this);
+
+            ImageButton listButton = (ImageButton) view.findViewById(R.id.btn_list);
+            listButton.setOnClickListener(this);
+
+            ImageButton refreshButton = (ImageButton) view.findViewById(R.id.btn_refresh);
+            refreshButton.setOnClickListener(this);
 
             return view;
         }
@@ -58,6 +68,35 @@ public class BottomToolbarFragment extends Fragment implements View.OnClickListe
 
                 transaction.commit();
 
+                break;
+
+            case R.id.btn_list:
+                Log.i("pressing this button", "Pressing list");
+                EventItemFragment ilfragment = new EventItemFragment();
+
+                Bundle username = new Bundle();
+                username.putString("username", mUsername);
+
+                ilfragment.setArguments(username);
+
+                FragmentManager manager2= getActivity().getSupportFragmentManager();//create an instance of fragment manager
+
+                FragmentTransaction transaction2=manager2.beginTransaction();//create an instance of Fragment-transaction
+
+                transaction2.replace(R.id.container2, ilfragment, "Frag_Bot");
+
+                transaction2.addToBackStack(null);
+
+                transaction2.commit();
+
+                break;
+
+            case R.id.btn_refresh:
+                Log.i("clicking refresh", "work pls");
+                getActivity().finish();
+                startActivity(getActivity().getIntent());
+                break;
+
         }
     }
 
@@ -67,9 +106,9 @@ public class BottomToolbarFragment extends Fragment implements View.OnClickListe
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             Bundle bundle = getArguments();
+            mUsername = null;
             if (bundle != null) {
-                String link = bundle.getString("url");
-                setText("hello world!!!!");
+                mUsername = bundle.getString("username");
             }
         }
 

@@ -317,7 +317,6 @@ public class AddFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        Log.i("hello","hello");
         EditText titleEditText = (EditText) getActivity().findViewById(R.id.title_text);
         String titleText = titleEditText.getText().toString();
 

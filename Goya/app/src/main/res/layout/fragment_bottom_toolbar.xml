@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimaryDark">
 
 
         <LinearLayout
@@ -23,9 +23,9 @@
                 android:id="@+id/btn_refresh"
                 android:layout_width="50dip"
                 android:layout_height="50dip"
-                android:tint="@color/colorPrimary"
+                android:tint="@color/colorPrimaryDark"
                 android:background="@drawable/button_circle"
-                android:layout_gravity="left"
+                android:layout_gravity="center"
                 android:layout_margin="@dimen/activity_vertical_margin"
                 android:src="@drawable/ic_refresh" />
 
@@ -44,7 +44,7 @@
                 android:id="@+id/btn_list"
                 android:layout_width="100dip"
                 android:layout_height="50dip"
-                android:tint="@color/colorPrimary"
+                android:tint="@color/colorPrimaryDark"
                 android:background="@color/colorWhite"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/activity_vertical_margin"
@@ -65,9 +65,9 @@
                 android:id="@+id/btn_add"
                 android:layout_width="50dip"
                 android:layout_height="50dip"
-                android:tint="@color/colorPrimary"
+                android:tint="@color/colorPrimaryDark"
                 android:background="@drawable/button_circle"
-                android:layout_gravity="right"
+                android:layout_gravity="center"
                 android:layout_margin="@dimen/activity_vertical_margin"
                 android:src="@drawable/ic_add_location" />
 
