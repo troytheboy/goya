@@ -112,8 +112,4 @@ public class BottomToolbarFragment extends Fragment implements View.OnClickListe
             }
         }
 
-        public void setText(String url) {
-            TextView view = (TextView) getView().findViewById(R.id.desc_text);
-            view.setText(url);
-        }
     }

@@ -440,6 +440,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("spot_marker",70,90))));
                             currentMarker.setTag(eventItem);
 
+                            if (eventItem.getGoVotes() - eventItem.getNoVotes() > 50) {
+                                currentMarker.setIcon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("spot_marker_gold",70,90)));
+                            }
+
                         }
                     }
                     @Override

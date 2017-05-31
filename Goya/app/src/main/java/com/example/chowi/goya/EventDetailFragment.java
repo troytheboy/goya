@@ -15,6 +15,8 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +26,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +42,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import static android.R.attr.data;
 import static android.R.attr.password;
@@ -295,11 +301,6 @@ public class EventDetailFragment extends Fragment {
         view.setImageBitmap(bitmap);
     }
 
-    public void setText(String url) {
-        TextView view = (TextView) getView().findViewById(R.id.desc_text);
-        view.setText(url);
-    }
-
     /*
     // Container Activity must implement this interface
     public interface OnHeadlineSelectedListener {
@@ -339,5 +340,6 @@ public class EventDetailFragment extends Fragment {
             return null;
         }
     }
+
 
 }

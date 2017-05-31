@@ -21,13 +21,13 @@
 
             <ImageButton
                 android:id="@+id/btn_refresh"
-                android:layout_width="50dip"
-                android:layout_height="50dip"
-                android:tint="@color/colorPrimaryDark"
-                android:background="@drawable/button_circle"
+                android:layout_width="60dip"
+                android:layout_height="60dip"
+                android:background="@drawable/button_circle_dark"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/activity_vertical_margin"
-                android:src="@drawable/ic_refresh" />
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_refresh_white" />
 
 
 
@@ -43,12 +43,13 @@
             <ImageButton
                 android:id="@+id/btn_list"
                 android:layout_width="100dip"
-                android:layout_height="50dip"
-                android:tint="@color/colorPrimaryDark"
-                android:background="@color/colorWhite"
+                android:layout_height="60dip"
+                android:tint="@color/colorWhite"
+                android:background="@color/colorPrimaryDark"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/activity_vertical_margin"
-                android:src="@drawable/ic_list_icon" />
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_up_chevron" />
 
         </LinearLayout>
 
@@ -63,13 +64,14 @@
 
             <ImageButton
                 android:id="@+id/btn_add"
-                android:layout_width="50dip"
-                android:layout_height="50dip"
-                android:tint="@color/colorPrimaryDark"
+                android:layout_width="60dip"
+                android:layout_height="60dip"
                 android:background="@drawable/button_circle"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/activity_vertical_margin"
-                android:src="@drawable/ic_add_location" />
+                android:padding="10dip"
+                android:scaleType="fitCenter"
+                android:src="@drawable/add_icon_transparent" />
 
         </LinearLayout>
 

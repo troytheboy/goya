@@ -35,29 +35,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
-
-            <TextView
-                android:id="@+id/add_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Desc: "
-                android:textAlignment="center"/>
-
-            <EditText
-                android:id="@+id/desc_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#040404"
-                android:textSize="15dip"
-                android:textStyle="bold"
-                android:typeface="sans" />
-
-        </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -68,7 +45,7 @@
                 android:id="@+id/add_pic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add a picture: (optional)"
+                android:text="Add a picture:"
                 android:textAlignment="center" />
 
             <android.support.design.widget.FloatingActionButton
@@ -76,8 +53,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/fab_margin"
-                android:tint="#B8F4EA"
-                android:src="@drawable/ic_camera" />
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:src="@drawable/picture_icon" />
 
             <ImageView
                 android:id="@+id/cam_image"

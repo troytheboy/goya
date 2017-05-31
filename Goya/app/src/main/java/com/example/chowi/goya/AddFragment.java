@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -208,6 +209,8 @@ public class AddFragment extends Fragment implements View.OnClickListener {
                 Bitmap imageBitmap = uriToBitmap(selectedImage);
 
                 mBitmap = imageBitmap;
+
+                //LinearLayout picHolder = (LinearLayout) getActivity().findViewById(R.id.pic_holder).set
                 mImageView.setImageBitmap(imageBitmap);
 
                 mTextView.setVisibility(View.GONE);
@@ -306,13 +309,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         Bundle bundle = getArguments();
         if (bundle != null) {
             String link = bundle.getString("url");
-            setText("hello world!!!!");
         }
-    }
-
-    public void setText(String url) {
-        TextView view = (TextView) getView().findViewById(R.id.desc_text);
-        view.setText(url);
     }
 
     @Override
@@ -320,15 +317,13 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         EditText titleEditText = (EditText) getActivity().findViewById(R.id.title_text);
         String titleText = titleEditText.getText().toString();
 
-        EditText descEditText = (EditText) getActivity().findViewById(R.id.desc_text);
-        String descText = descEditText.getText().toString();
 
         // if the number is empty, dont send and toast error message
         if (titleText.isEmpty()) {
             Toast.makeText(getContext(), "Enter a title", Toast.LENGTH_SHORT).show();
             // if the text body is empty, dont send and toast error message
-        } else if (descText.isEmpty()) {
-            Toast.makeText(getContext(), "Enter a description", Toast.LENGTH_SHORT).show();
+        } else if (imageToUploadUri == null) {
+            Toast.makeText(getContext(), "Take a picture!", Toast.LENGTH_SHORT).show();
             // send text and reset field values
         } else {
             Uri encodedImage = null;
@@ -336,9 +331,8 @@ public class AddFragment extends Fragment implements View.OnClickListener {
                 encodedImage = imageToUploadUri;
                 imageToUploadUri = null;
             }
-            mCallback.onPostSelected(titleText, descText, encodedImage);
+            mCallback.onPostSelected(titleText, null, encodedImage);
             titleEditText.setText("");
-            descEditText.setText("");
             mTextView.setVisibility(View.VISIBLE);
             mFAB.setVisibility(View.VISIBLE);
             mImageView.setVisibility(View.GONE);
