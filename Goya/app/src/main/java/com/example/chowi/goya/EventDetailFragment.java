@@ -154,6 +154,7 @@ public class EventDetailFragment extends Fragment {
 
         final ImageButton buttonGovote = (ImageButton) getActivity().findViewById(R.id.btn_govote);
         final ImageButton buttonNovote = (ImageButton) getActivity().findViewById(R.id.btn_novote);
+        final ImageButton buttonComment = (ImageButton) getActivity().findViewById(R.id.btn_comment);
 
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -279,6 +280,13 @@ public class EventDetailFragment extends Fragment {
 
         });
 
+        buttonComment.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Comments coming soon!", Toast.LENGTH_SHORT).show();
+
+            }
+
+        });
 
 
 
