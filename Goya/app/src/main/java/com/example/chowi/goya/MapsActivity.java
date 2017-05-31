@@ -5,6 +5,7 @@ import android.app.ActionBar;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
@@ -49,6 +50,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -427,13 +429,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             EventItem eventItem = snapshot.getValue(EventItem.class);
-                            Log.i("hello in here", eventItem.getTitle());
+
+
 
                             LatLng currentItemLatLng = new LatLng(eventItem.getLatitude(), eventItem.getLongitude());
                             Marker currentMarker =  mMap.addMarker(new MarkerOptions()
                                     .position(currentItemLatLng)
-                                    .title(eventItem.getTitle())
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+                                    //.title(eventItem.getTitle())
+                                    //.icon(BitmapDescriptorFactory.fromResource(R.drawable.spot_marker.png)
+                                    .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("spot_marker",70,90))));
                             currentMarker.setTag(eventItem);
 
                         }
@@ -446,6 +450,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Write a message to the database
         Log.i("hello", "firebase should have just worked");
+    }
+
+    public Bitmap resizeMapIcons(String iconName, int width, int height){
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getPackageName()));
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
+        return resizedBitmap;
     }
 
     /** Called when the user clicks a marker. */
