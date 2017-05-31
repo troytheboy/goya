@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -68,7 +69,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
     //PackageManager pm = getActivity().getPackageManager();
 
     private TextView mTextView;
-    private FloatingActionButton mFAB;
+    private ImageButton mFAB;
 
     private ImageView mImageView;
 
@@ -92,7 +93,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
 
 
         mTextView = (TextView) view.findViewById(R.id.add_pic);
-        mFAB = (FloatingActionButton) view.findViewById(R.id.fab_camera);
+        mFAB = (ImageButton) view.findViewById(R.id.fab_camera);
 
         mImageView = (ImageView) view.findViewById(R.id.cam_image);
 
@@ -102,7 +103,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         Button postButton = (Button) view.findViewById(R.id.button_post);
         postButton.setOnClickListener(this);
 
-        FloatingActionButton camButton = (FloatingActionButton) view.findViewById(R.id.fab_camera);
+        ImageButton camButton = (ImageButton) view.findViewById(R.id.fab_camera);
         camButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.i("clicking camera!", "camera being pressed");
