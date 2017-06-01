@@ -13,12 +13,13 @@ Goya is a location driven social media application that lets users experience so
 # Tech Used
 
 **Development Platform:** Android
-
+Half of our group had experience developing on Android so we decided to move forward with this platform.
 **IDE:** Android Studio
-
+Easy decision, IDE made for working on Android apps
 **Database:** Google Firebase
-
+Another easy decision, free and easy to integrate with Android since they're both google products
 **Project Managment:** Trello
+Free project management board we had experience with from pervious classes
 
 # Contact Information
 
