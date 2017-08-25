@@ -6,6 +6,7 @@ import static android.R.attr.userVisible;
 
 /**
  * Created by chowi on 4/15/2017.
+ * This Account class is an object AccountItem that contains fields for username, email, and password.
  */
 
 
